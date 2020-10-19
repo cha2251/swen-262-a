@@ -7,17 +7,14 @@ public class Book {
     List<String> authorList;
     String publisher;
     String publishedDate;
-    int pages;
     int copies;
     int available;
 
-    public Book(long isbn, String title, String authorList, String publisher, String publishedDate,
-                int pages) {
+    public Book(long isbn, String title, String authorList, String publisher, String publishedDate) {
         this.isbn = isbn;
         this.title = title;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
-        this.pages = pages;
         authorList.replace("{", "");
         authorList.replace("}", "");
         this.authorList = new ArrayList<>();

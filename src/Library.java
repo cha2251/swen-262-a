@@ -101,8 +101,7 @@ public class Library {
         String authorsString = args.get(2).replace("{", "").replace("}", "");
         String publisher = args.get(3);
         String publishedDate = args.get(4);
-        int pages = Integer.parseInt(args.get(5));
-        Book book = new Book(isbn, title, authorsString, publisher, publishedDate, pages);
+        Book book = new Book(isbn, title, authorsString, publisher, publishedDate);
         addBook(book);
 
     }
@@ -112,7 +111,7 @@ public class Library {
 
     public void handle(String input) {
         String response = parser.parseRequest(input);
-        if(response != "") {
+        if(!response.equals("")) {
             Request request = new Request(response);
             requests.add(request);
         }
