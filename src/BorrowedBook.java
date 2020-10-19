@@ -1,5 +1,7 @@
 import java.time.LocalDateTime;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+
 public class BorrowedBook {
     private Book book;
     private LocalDateTime dueDate;
@@ -28,4 +30,8 @@ public class BorrowedBook {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return ""+book.getIsbn()+","+book.getTitle()+","+checkoutDate.format(ISO_LOCAL_DATE);
+    }
 }

@@ -207,8 +207,14 @@ public class Library {
     public String findBorrowedBooks(String id){
         if (checkForID(id)) return "borrowed,invalid-vsitor-id;";
         Visitor visitor = getVisitor(id);
-        String str = "borrowed,"+visitor.getNumBooksBorrowed()+"";
-        return "borrowed,n,[<nl>[books]";
+        String str = "borrowed,"+visitor.getNumBooksBorrowed();
+        int i = 1;
+        for (BorrowedBook book : visitor.findBorrowedBooks()){
+            str+="\n"+i+","+book;
+            i++;
+        }
+        str+=";";
+        return str;
     }
 
 }
