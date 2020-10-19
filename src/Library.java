@@ -2,21 +2,24 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Library {
+
+    private static String root;
+    private static LocalDateTime epoch;
+
     private static Library instance = new Library();
 
+    private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
+    private RequestParser parser;
 
     private Library(){}
 
     public static Library getInstance(){
         return instance;
-    }
-
-    public void showMessage(){
-        System.out.println("In R1-dev branch");
     }
 
     public void loadBooks(File file) {
@@ -34,6 +37,29 @@ public class Library {
             e.printStackTrace();
         }
     }
+
+    public void startUp(String root) {
+        this.parser = new RequestParser();
+        this.root = root;
+        File info = new File(root + "/data/info.txt");
+        if(info.exists()) {
+            //Load state from files
+            System.out.println("Restoring state");
+        }
+        else {
+            //First time startup
+            epoch = LocalDateTime.now();
+            System.out.println("New startup: " + epoch);
+        }
+
+        loadBooks(new File(root + "/data/books.txt"));
+    }
+
+    public void shutDown() {
+        //Save the current state into files and shut down
+        System.out.println("Shutting down");
+    }
+
 
     void parseBook(String info) {
         boolean inField = false;
@@ -79,9 +105,19 @@ public class Library {
         addBook(book);
 
     }
+    public boolean isUp() {
+        return true;
+    }
+
+    public void handle(String input) {
+        String response = parser.parseRequest(input);
+        if(response != "") {
+            Request request = new Request(response);
+            requests.add(request);
+        }
+    }
 
     void addBook(Book book) {
         books.add(book);
-        System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
     }
 }

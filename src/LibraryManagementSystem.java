@@ -1,14 +1,18 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Scanner;
 
 public class LibraryManagementSystem {
 
+    static String root;
+
     public static void main(String[] args) {
+        root = System.getProperty("user.dir");
         Library library = Library.getInstance();
-        library.showMessage();
-        String root = System.getProperty("user.dir");
-        library.loadBooks(new File(root + "/data/books.txt"));
+        library.startUp(root);
+
+        Scanner scanner = new Scanner(System.in);
+        while (library.isUp()) {
+            String input = scanner.nextLine();
+            library.handle(input);
+        }
     }
 }

@@ -18,12 +18,11 @@ public class Book {
         this.publisher = publisher;
         this.publishedDate = publishedDate;
         this.pages = pages;
-        authorList.replace("{", "");
-        authorList.replace("}", "");
         this.authorList = new ArrayList<>();
         String[] tentativeList = authorList.split(",");
         for(String author : tentativeList) {
             this.authorList.add(author);
         }
     }
+
 }
