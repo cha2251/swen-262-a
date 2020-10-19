@@ -6,12 +6,10 @@ import java.util.ArrayList;
 
 public class Library {
     private static Library instance = new Library();
-
-    private ArrayList<Book> books = new ArrayList<>();
-
+    
     private Library(){}
 
-    private Catalog catalog;
+    private Catalog catalog = new Catalog();
 
     public static Library getInstance(){
         return instance;
@@ -78,12 +76,8 @@ public class Library {
         String publishedDate = args.get(4);
         int pages = Integer.parseInt(args.get(5));
         Book book = new Book(isbn, title, authorsString, publisher, publishedDate, pages);
-        addBook(book);
+        catalog.addBook(book);
 
     }
 
-    void addBook(Book book) {
-        books.add(book);
-        System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
-    }
 }

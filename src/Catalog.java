@@ -10,6 +10,11 @@ public class Catalog {
         bookList = new ArrayList<Book>();
     }
 
+   public void addBook(Book book) {
+        bookList.add(book);
+        System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
+    }
+
     public void setSortOrder(Ordering newOrdering){
         sortOrder = newOrdering;
     }

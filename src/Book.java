@@ -26,4 +26,8 @@ public class Book {
             this.authorList.add(author);
         }
     }
+
+    public String getTitle(){
+        return title;
+    }
 }
