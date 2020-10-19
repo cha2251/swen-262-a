@@ -16,7 +16,6 @@ public class Library {
     private static Library instance = new Library();
 
     private ArrayList<Request> requests = new ArrayList<>();
-    private RequestParser parser;
 
     private Library(){}
 
@@ -45,7 +44,6 @@ public class Library {
     }
 
     public void startUp(String root) {
-        this.parser = new RequestParser();
         this.root = root;
         File info = new File(root + "/data/info.txt");
         if(info.exists()) {
@@ -114,54 +112,6 @@ public class Library {
         return true;
     }
 
-    public void handle(String input) {
-        String[] response = parser.parseRequest(input);
-        if(response!=null) {
-            //First argument is the request type
-            String type = response[0].toLowerCase();
-
-            //Switch on type of request
-            switch (type) {
-                case "register":
-                    Request register = new RegisterVisitorRequest(this);
-                    System.out.println(register.execute(response));
-                    break;
-                case "arrive":
-                    Request arrive = new ArriveRequest(this);
-                    System.out.println(arrive.execute(response));
-                    break;
-                case "depart":
-                    Request depart = new DepartRequest(this);
-                    System.out.println(depart.execute(response));
-                    break;
-                case "info":
-                    Request info = new InfoRequest(this);
-                    System.out.println(info.execute(response));
-                    break;
-                case "borrow":
-                    break;
-                case "borrowed":
-                    break;
-                case "return":
-                    break;
-                case "pay":
-                    break;
-                case "search":
-                    break;
-                case "buy":
-                    break;
-                case "advance":
-                    break;
-                case "datetime":
-                    break;
-                case "report":
-                    break;
-                default:
-                    System.out.println("Not a valid request");
-                    break;
-            }
-        }
-    }
 
     public LocalDateTime getEpoch(){
         return epoch;
