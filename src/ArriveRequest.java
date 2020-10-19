@@ -10,4 +10,9 @@ public class ArriveRequest implements Request {
     public String execute(String[] args) {
         return null;
     }
+
+    @Override
+    public void error(String message) {
+
+    }
 }
