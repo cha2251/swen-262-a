@@ -121,15 +121,50 @@ public class Library {
         catalog.addBook(book);
     }
 
-    public boolean checkForVisitor(Visitor visitor){
+    private boolean checkForVisitor(Visitor visitor){
         return visitorList.contains(visitor);
     }
 
-    public String registerVisitor(){
+    private boolean checkForID(String id){
+        for(Visitor visitor : visitorList){
+            if (visitor.getId().equals(id)) return true;
+        }
+        return false;
+    }
+
+    private boolean checkActiveVisitors(Visitor visitor){
+        for(Visit visit : activeVisits){
+            if (visit.getVisitor().equals(visitor)) return true;
+        }
+        return false;
+    }
+
+    private Visitor getVisitor(String id){
+        for(Visitor visitor : visitorList){
+            if (visitor.getId().equals(id)) return visitor;
+        }
+        return null;
+    }
+
+    public String registerVisitor(String firstName, String lastName, String address, String phoneNumber){
         String str = ""+currentID;
         String id  = ("0000000000"+str).substring(str.length());
 
-        return id;
+        Visitor visitor = new Visitor(id, firstName, lastName, address, phoneNumber);
+
+        if (!checkForVisitor(visitor)){
+            visitorList.add(visitor);
+            return id;
+        }
+
+        return "register,duplicate;";
+    }
+
+    public String beginVisit(String id){
+        if (!checkForID(id)) return "arrive,invalid-id;";
+        Visitor visitor = getVisitor(id);
+        if (!checkActiveVisitors(visitor)) return "arrive,duplicate;";
+        Visit visit = new Visit(visitor, epoch);
     }
 
 }

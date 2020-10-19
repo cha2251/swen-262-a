@@ -20,6 +20,10 @@ public class Visit {
         return startDate.format(ISO_LOCAL_TIME);
     }
 
+    public Visitor getVisitor() {
+        return visitor;
+    }
+
     public String endVisit(LocalDateTime currentDate){
         long hours = startDate.until( currentDate, ChronoUnit.HOURS );
         long minutes = startDate.until( currentDate, ChronoUnit.MINUTES );
