@@ -24,7 +24,7 @@ public class Visit {
         return visitor;
     }
 
-    public String endVisit(LocalDateTime currentDate){
+    public String getElapsedTime(LocalDateTime currentDate){
         long hours = startDate.until( currentDate, ChronoUnit.HOURS );
         long minutes = startDate.until( currentDate, ChronoUnit.MINUTES );
         long seconds = startDate.until( currentDate, ChronoUnit.SECONDS );

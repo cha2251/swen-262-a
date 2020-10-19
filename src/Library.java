@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -11,6 +12,8 @@ public class Library {
 
     private static String root;
     private static LocalDateTime epoch;
+    private LocalDateTime currentDateTime = epoch;
+    private LocalDateTime modifiedTime = currentDateTime;
     private static int currentID = 1;
 
     private static Library instance = new Library();
@@ -139,6 +142,13 @@ public class Library {
         return false;
     }
 
+    public Visit getVisit(String id){
+        for(Visit visit : activeVisits){
+            if (visit.getVisitor().getId().equals(id)) return visit;
+        }
+        return null;
+    }
+
     private Visitor getVisitor(String id){
         for(Visitor visitor : visitorList){
             if (visitor.getId().equals(id)) return visitor;
@@ -164,11 +174,20 @@ public class Library {
         if (!checkForID(id)) return "arrive,invalid-id;";
         Visitor visitor = getVisitor(id);
         if (!checkActiveVisitors(visitor)) return "arrive,duplicate;";
-        Visit visit = new Visit(visitor, epoch);
+        Visit visit = new Visit(visitor, modifiedTime);
         activeVisits.add(visit);
 
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
 
+    public String endVisit(String id){
+        if (!checkForID(id)) return "depart,invalid-id;";
+        Visitor visitor = getVisitor(id);
+        if (checkActiveVisitors(visitor)) return "depart,duplicate;";
+        Visit visit = getVisit(id);
+        activeVisits.remove(visit);
+
+        return "depart,"+id+","+modifiedTime.format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(modifiedTime)+";";
+    }
 
 }
