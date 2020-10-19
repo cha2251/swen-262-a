@@ -1,10 +1,7 @@
-public class RequestParser implements RequestListener {
-    @Override
-    public void update(Request request) {
+public class RequestParser {
 
-    }
     StringBuilder current;
-    public String parseRequest(String input) {
+    public String[] parseRequest(String input) {
         if(current == null) {
             current = new StringBuilder();
         }
@@ -12,7 +9,7 @@ public class RequestParser implements RequestListener {
         for(char character : characters) {
             switch (character) {
                 case ';':
-                    String finished = current.toString();
+                    String[] finished = current.toString().split(",");
                     current = null;
                     return finished;
                 default:
@@ -20,6 +17,6 @@ public class RequestParser implements RequestListener {
                     break;
             }
         }
-        return "";
+        return null;
     }
 }
