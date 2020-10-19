@@ -170,5 +170,8 @@ public class Library {
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
 
+    public String search(String title, String[] authors, String isbn, String publisher, String sort) {
 
+        return null;
+    }
 }
