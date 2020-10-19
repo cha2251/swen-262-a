@@ -19,8 +19,4 @@ public class RegisterVisitorRequest implements Request {
         }
         return "register,missing-parameters,{first name,last name,address, phone-number};";
     }
-    @Override
-    public void error(String s) {
-        System.out.println(s);
-    }
 }

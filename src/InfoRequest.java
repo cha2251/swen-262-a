@@ -4,14 +4,11 @@ public class InfoRequest implements Request{
     public InfoRequest(Library library) {
         this.library = library;
     }
-
     @Override
     public String execute(String[] args) {
-        return null;
-    }
-
-    @Override
-    public void error(String message) {
-
+        if(args.length >= 3) {
+            String title = args[1];
+        }
+        return "info,title,{authors},[isbn, [publisher,[sort order]]];";
     }
 }

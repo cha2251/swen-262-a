@@ -180,6 +180,9 @@ public class Library {
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
 
+    public String search(String title, String[] authors, String isbn, String publisher, String sort) {
+        return null;
+    }
     public String endVisit(String id){
         if (checkForID(id)) return "depart,invalid-id;";
         Visitor visitor = getVisitor(id);

@@ -8,11 +8,11 @@ public class ArriveRequest implements Request {
 
     @Override
     public String execute(String[] args) {
-        return null;
-    }
-
-    @Override
-    public void error(String message) {
-
+        if(args.length == 2) {
+            String id = args[1];
+            String result = library.beginVisit(id);
+            return result;
+        }
+        return "arrive,missing-parameters,{id};";
     }
 }
