@@ -4,11 +4,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 public class Library {
 
     private static String root;
     private static LocalDateTime epoch;
+    private static int currentID = 1;
 
     private static Library instance = new Library();
 
@@ -18,6 +21,8 @@ public class Library {
     private Library(){}
 
     private Catalog catalog = new Catalog();
+    private List<Visitor> visitorList = new ArrayList<>();
+    private List<Visit> activeVisits = new ArrayList<>();
 
     public static Library getInstance() {
         return instance;
@@ -158,7 +163,23 @@ public class Library {
         }
     }
 
+    public LocalDateTime getEpoch(){
+        return epoch;
+    }
+
     void addBook(Book book) {
         catalog.addBook(book);
     }
+
+    public boolean checkForVisitor(Visitor visitor){
+        return visitorList.contains(visitor);
+    }
+
+    public String registerVisitor(){
+        String str = ""+currentID;
+        String id  = ("0000000000"+str).substring(str.length());
+
+        return id;
+    }
+
 }

@@ -3,13 +3,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Visitor {
-    private int id;
-    private String firstName, lastName, address, phoneNumber;
+    private String id, firstName, lastName, address, phoneNumber;
 
     private List<BorrowedBook> borrowedBooks;
     private double finesOwed;
 
-    public Visitor(int id, String firstName, String lastName, String address, String phoneNumber){
+    public Visitor(String id, String firstName, String lastName, String address, String phoneNumber){
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
