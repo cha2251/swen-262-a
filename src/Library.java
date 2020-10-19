@@ -217,4 +217,9 @@ public class Library {
         return str;
     }
 
+    public String returnBook(String id, ArrayList<String> bookID){
+        if (checkForID(id)) return "return,invalid-vsitor-id;";
+
+    }
+
 }
