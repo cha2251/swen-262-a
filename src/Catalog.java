@@ -3,16 +3,22 @@ import java.util.List;
 
 public class Catalog {
 
-    private List<Book> bookList;
+    private List<Book> purchasableList;
+    private List<Book> ownedList;
     private Ordering sortOrder;
 
     public Catalog(){
-        bookList = new ArrayList<Book>();
+        purchasableList = new ArrayList<Book>();
+        ownedList = new ArrayList<Book>();
     }
 
    public void addBook(Book book) {
-        bookList.add(book);
+        purchasableList.add(book);
         System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
+    }
+
+    public void buyBook(Book book){
+        ownedList.add(book);
     }
 
     public void setSortOrder(Ordering newOrdering){
@@ -20,6 +26,6 @@ public class Catalog {
     }
 
     public List sortCatalog(Ordering ordering){
-        return sortOrder.sort(bookList);
+        return sortOrder.sort(ownedList);
     }
 }

@@ -13,7 +13,6 @@ public class Library {
     private static Library instance = new Library();
 
     private ArrayList<Request> requests = new ArrayList<>();
-    private ArrayList<Book> books = new ArrayList<>();
     private RequestParser parser;
 
     private Library(){}
@@ -120,6 +119,6 @@ public class Library {
     }
 
     void addBook(Book book) {
-        books.add(book);
+        catalog.addBook(book);
     }
 }
