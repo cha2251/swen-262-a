@@ -165,6 +165,10 @@ public class Library {
         Visitor visitor = getVisitor(id);
         if (!checkActiveVisitors(visitor)) return "arrive,duplicate;";
         Visit visit = new Visit(visitor, epoch);
+        activeVisits.add(visit);
+
+        return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
+
 
 }
