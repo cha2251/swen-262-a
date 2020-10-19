@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+
 public class Visitor {
     private String id, firstName, lastName, address, phoneNumber;
 
@@ -19,10 +21,12 @@ public class Visitor {
         borrowedBooks = new ArrayList<BorrowedBook>();
     }
 
-    public void borrowBook(List<Book> books){
+    public String borrowBook(List<Book> books, LocalDateTime currentDate){
         for(Book book : books){
-            borrowedBooks.add(new BorrowedBook(book, LocalDateTime.now()));
+            borrowedBooks.add(new BorrowedBook(book, currentDate));
         }
+
+        return currentDate.plusDays(7).format(ISO_LOCAL_DATE);
     }
 
     public List<BorrowedBook> findBorrowedBooks(){
@@ -54,6 +58,14 @@ public class Visitor {
 
     public String getId() {
         return id;
+    }
+
+    public int getNumBooksBorrowed(){
+        return borrowedBooks.size();
+    }
+
+    public double getFinesOwed() {
+        return finesOwed;
     }
 
     @Override

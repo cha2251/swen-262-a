@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 public class Library {
@@ -120,7 +119,7 @@ public class Library {
         return epoch;
     }
 
-    void addBook(Book book) {
+    private void addBook(Book book) {
         catalog.addBook(book);
     }
 
@@ -130,9 +129,9 @@ public class Library {
 
     private boolean checkForID(String id){
         for(Visitor visitor : visitorList){
-            if (visitor.getId().equals(id)) return true;
+            if (visitor.getId().equals(id)) return false;
         }
-        return false;
+        return true;
     }
 
     private boolean checkActiveVisitors(Visitor visitor){
@@ -142,7 +141,7 @@ public class Library {
         return false;
     }
 
-    public Visit getVisit(String id){
+    private Visit getVisit(String id){
         for(Visit visit : activeVisits){
             if (visit.getVisitor().getId().equals(id)) return visit;
         }
@@ -155,6 +154,7 @@ public class Library {
         }
         return null;
     }
+
 
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber){
         String str = ""+currentID;
@@ -171,7 +171,7 @@ public class Library {
     }
 
     public String beginVisit(String id){
-        if (!checkForID(id)) return "arrive,invalid-id;";
+        if (checkForID(id)) return "arrive,invalid-id;";
         Visitor visitor = getVisitor(id);
         if (!checkActiveVisitors(visitor)) return "arrive,duplicate;";
         Visit visit = new Visit(visitor, modifiedTime);
@@ -181,13 +181,31 @@ public class Library {
     }
 
     public String endVisit(String id){
-        if (!checkForID(id)) return "depart,invalid-id;";
+        if (checkForID(id)) return "depart,invalid-id;";
         Visitor visitor = getVisitor(id);
         if (checkActiveVisitors(visitor)) return "depart,duplicate;";
         Visit visit = getVisit(id);
         activeVisits.remove(visit);
 
         return "depart,"+id+","+modifiedTime.format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(modifiedTime)+";";
+    }
+
+    public String borrowBook(String id, ArrayList<String> bookID){
+        if (checkForID(id)) return "borrow,invalid-vsitor-id;";
+        List<?> tempList = catalog.getBooks(bookID);
+        if (tempList.get(0) instanceof String) return "borrow,invalid-book-id,{"+tempList+"};";
+        Visitor visitor = getVisitor(id);
+        if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "borrow,book-limit-exceeded;";
+        if (visitor.getFinesOwed() > 0 ) return "borrow,outstanding-fine,"+visitor.getFinesOwed();
+
+        return visitor.borrowBook((List<Book>) tempList, modifiedTime);
+    }
+
+    public String findBorrowedBooks(String id){
+        if (checkForID(id)) return "borrowed,invalid-vsitor-id;";
+        Visitor visitor = getVisitor(id);
+        String str = "borrowed,"+visitor.getNumBooksBorrowed()+"";
+        return "borrowed,n,[<nl>[books]";
     }
 
 }

@@ -21,6 +21,22 @@ public class Catalog {
         ownedList.add(book);
     }
 
+    public List<?> getBooks(List<String> ids){
+        List<Book> passList = new ArrayList<Book>();
+        List<String> failList = ids;
+        for (String id : ids) {
+            for (Book book : ownedList) {
+                if (book.getIsbn() == Long.parseLong(id)){
+                    passList.add(book);
+                    failList.remove(id);
+                    break;
+                }
+            }
+        }
+        if(failList.size() > 0) return failList;
+        return passList;
+    }
+
     public void setSortOrder(Ordering newOrdering){
         sortOrder = newOrdering;
     }
