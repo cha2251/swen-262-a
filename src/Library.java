@@ -18,6 +18,8 @@ public class Library {
 
     private Library(){}
 
+    private Catalog catalog = new Catalog();
+
     public static Library getInstance(){
         return instance;
     }
