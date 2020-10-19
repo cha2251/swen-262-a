@@ -1,6 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Visitor {
     private int id;
@@ -50,5 +51,16 @@ public class Visitor {
         if (amount > finesOwed || amount < 0)return -1;
         finesOwed -= amount;
         return finesOwed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Visitor visitor = (Visitor) o;
+        return firstName.equals(visitor.firstName) &&
+                lastName.equals(visitor.lastName) &&
+                address.equals(visitor.address) &&
+                phoneNumber.equals(visitor.phoneNumber);
     }
 }
