@@ -3,6 +3,8 @@ public class Library {
 
     private Library(){}
 
+    private Catalog catalog;
+
     public static Library getInstance(){
         return instance;
     }
