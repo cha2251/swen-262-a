@@ -1,31 +1,29 @@
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Book {
+    long isbn;
+    String title;
+    List<String> authorList;
+    String publisher;
+    String publishedDate;
+    int pages;
+    int copies;
+    int available;
 
-    private int isbn, pageCount, numberOfCopies, copiesAvailable;
-    private String title, author, publisher;
-    private Date publishDate;
-
-    public Book(int isbn, String title, String author, String publisher, Date publishDate, int pageCount, int numberOfCopies, int copiesAvailable){
+    public Book(long isbn, String title, String authorList, String publisher, String publishedDate,
+                int pages) {
         this.isbn = isbn;
         this.title = title;
-        this.author = author;
         this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.pageCount = pageCount;
-        this.numberOfCopies = numberOfCopies;
-        this.copiesAvailable = copiesAvailable;
-    }
-
-    public void checkIn(){
-        copiesAvailable++;
-    }
-
-    public void checkOut(){
-        copiesAvailable--;
-    }
-
-    public String getAuthor(){
-        return author;
+        this.publishedDate = publishedDate;
+        this.pages = pages;
+        authorList.replace("{", "");
+        authorList.replace("}", "");
+        this.authorList = new ArrayList<>();
+        String[] tentativeList = authorList.split(",");
+        for(String author : tentativeList) {
+            this.authorList.add(author);
+        }
     }
 }
