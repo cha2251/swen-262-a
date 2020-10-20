@@ -10,6 +10,7 @@ public class Catalog {
     public Catalog(){
         purchasableList = new ArrayList<Book>();
         ownedList = new ArrayList<Book>();
+        sortOrder = new TitleOrdering();
     }
 
    public void addBook(Book book) {
@@ -41,7 +42,7 @@ public class Catalog {
         sortOrder = newOrdering;
     }
 
-    public List sortCatalog(Ordering ordering){
+    public List sortCatalog(){
         return sortOrder.sort(ownedList);
     }
 }

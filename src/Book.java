@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Book {
@@ -15,13 +16,10 @@ public class Book {
         this.title = title;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
-        authorList.replace("{", "");
-        authorList.replace("}", "");
+        String improved = authorList.replace("{", "").replace("}", "");
         this.authorList = new ArrayList<>();
-        String[] tentativeList = authorList.split(",");
-        for(String author : tentativeList) {
-            this.authorList.add(author);
-        }
+        String[] tentativeList = improved.split(",");
+        this.authorList.addAll(Arrays.asList(tentativeList));
     }
 
     public String getTitle(){

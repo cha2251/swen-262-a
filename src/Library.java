@@ -180,7 +180,10 @@ public class Library {
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
 
-    public String search(String title, String[] authors, String isbn, String publisher, String sort) {
+    public String search(String title, String authors, String isbn, String publisher, String sort) {
+        Search search = new BasicSearch(catalog);
+        search = new SearchTitle(search, title);
+        search = new SearchAuthor(search, authors);
         return null;
     }
     public String endVisit(String id){
@@ -194,7 +197,7 @@ public class Library {
     }
 
     public String borrowBook(String id, ArrayList<String> bookID){
-        if (checkForID(id)) return "borrow,invalid-vsitor-id;";
+        if (checkForID(id)) return "borrow,invalid-visitor-id;";
         List<?> tempList = catalog.getBooks(bookID);
         if (tempList.get(0) instanceof String) return "borrow,invalid-book-id,{"+tempList+"};";
         Visitor visitor = getVisitor(id);
@@ -219,7 +222,6 @@ public class Library {
 
     public String returnBook(String id, ArrayList<String> bookID){
         if (checkForID(id)) return "return,invalid-vsitor-id;";
-
+        return null;
     }
-
 }
