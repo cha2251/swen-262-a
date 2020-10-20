@@ -50,6 +50,7 @@ public class RequestParser {
             }
         }
         args.add(current.toString());
+        current = new StringBuilder();
         return GetStringArray(args);
     }
     public static String[] GetStringArray(ArrayList<String> arr)

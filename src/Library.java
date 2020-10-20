@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Library {
@@ -184,7 +185,8 @@ public class Library {
         Search search = new BasicSearch(catalog);
         search = new SearchTitle(search, title);
         search = new SearchAuthor(search, authors);
-        return null;
+        List<Book> results = search.result(catalog.sortCatalog());
+        return "info," +results.size() + "," + results.toString();
     }
     public String endVisit(String id){
         if (checkForID(id)) return "depart,invalid-id;";

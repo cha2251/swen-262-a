@@ -15,6 +15,7 @@ public class Catalog {
 
    public void addBook(Book book) {
         purchasableList.add(book);
+        ownedList.add(book);
         System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
     }
 

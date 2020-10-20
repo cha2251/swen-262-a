@@ -29,4 +29,9 @@ public class Book {
     public long getIsbn() {
         return isbn;
     }
+
+    @Override
+    public String toString() {
+        return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate + "\n";
+    }
 }

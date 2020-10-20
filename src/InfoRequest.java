@@ -12,7 +12,7 @@ public class InfoRequest implements Request{
             String isbn = args[3];
             String publisher = args[4];
             String sort = args[5];
-            library.search(title,authorList,isbn,publisher,sort);
+            return library.search(title,authorList,isbn,publisher,sort);
         }
         return "info,missing-parameters,{title,{authors},[isbn, [publisher,[sort order]]]};";
     }
