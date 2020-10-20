@@ -8,14 +8,16 @@ public class Book {
     List<String> authorList;
     String publisher;
     String publishedDate;
+    int pages;
     int copies;
     int available;
 
-    public Book(long isbn, String title, String authorList, String publisher, String publishedDate) {
+    public Book(long isbn, String title, String authorList, String publisher, String publishedDate, int pages) {
         this.isbn = isbn;
         this.title = title;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
+        this.pages = pages;
         String improved = authorList.replace("{", "").replace("}", "");
         this.authorList = new ArrayList<>();
         String[] tentativeList = improved.split(",");
@@ -32,6 +34,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate + "\n";
+        return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate +","+ pages +"\n";
     }
 }
