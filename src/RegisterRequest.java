@@ -1,8 +1,8 @@
-public class RegisterVisitorRequest implements Request {
+public class RegisterRequest implements Request {
 
     private Library library;
 
-    public RegisterVisitorRequest(Library library) {
+    public RegisterRequest(Library library) {
         this.library = library;
     }
 

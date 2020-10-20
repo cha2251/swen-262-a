@@ -5,15 +5,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Library {
 
     private static String root;
     private static LocalDateTime epoch;
-    private LocalDateTime currentDateTime = epoch;
-    private LocalDateTime modifiedTime = currentDateTime;
+    private LocalDateTime modifiedTime;
     private static int currentID = 1;
 
     private static Library instance = new Library();
@@ -56,6 +54,7 @@ public class Library {
         else {
             //First time startup
             epoch = LocalDateTime.now();
+            modifiedTime = LocalDateTime.of(0,0,0,0,0);
             System.out.println("New startup: " + epoch);
         }
 
@@ -67,6 +66,17 @@ public class Library {
         System.out.println("Shutting down");
     }
 
+    public LocalDateTime getLibraryTime() {
+        LocalDateTime realTime = LocalDateTime.now();
+        long addedHours = modifiedTime.getHour();
+        long addedDays = modifiedTime.getDayOfYear();
+        return realTime.plusHours(addedHours).plusDays(addedDays);
+
+    }
+    private LocalDateTime modifyTime(long days, long hours) {
+        modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
+        return getLibraryTime();
+    }
 
     void parseBook(String info) {
         boolean inField = false;
@@ -107,7 +117,8 @@ public class Library {
         String authorsString = args.get(2).replace("{", "").replace("}", "");
         String publisher = args.get(3);
         String publishedDate = args.get(4);
-        Book book = new Book(isbn, title, authorsString, publisher, publishedDate);
+        int pages = Integer.parseInt(args.get(5));
+        Book book = new Book(isbn, title, authorsString, publisher, publishedDate, pages);
         addBook(book);
 
     }
@@ -128,16 +139,23 @@ public class Library {
         return visitorList.contains(visitor);
     }
 
-    private boolean checkForID(String id){
+    private boolean visitorExists(String id){
         for(Visitor visitor : visitorList){
-            if (visitor.getId().equals(id)) return false;
+            if (visitor.getId().equals(id)) return true;
         }
-        return true;
+        return false;
     }
 
     private boolean checkActiveVisitors(Visitor visitor){
         for(Visit visit : activeVisits){
             if (visit.getVisitor().equals(visitor)) return true;
+        }
+        return false;
+    }
+    private boolean isVisiting(String id) {
+        Visitor inQuestion = getVisitor(id);
+        if(inQuestion != null) {
+            return checkActiveVisitors(inQuestion);
         }
         return false;
     }
@@ -172,10 +190,11 @@ public class Library {
     }
 
     public String beginVisit(String id){
-        if (checkForID(id)) return "arrive,invalid-id;";
+        if(isVisiting(id)) {
+            return "duplicate;";
+        }
         Visitor visitor = getVisitor(id);
-        if (!checkActiveVisitors(visitor)) return "arrive,duplicate;";
-        Visit visit = new Visit(visitor, modifiedTime);
+        Visit visit = new Visit(visitor, getLibraryTime());
         activeVisits.add(visit);
 
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
@@ -191,28 +210,25 @@ public class Library {
         return "info," +results.size() + "," + results.toString();
     }
     public String endVisit(String id){
-        if (checkForID(id)) return "depart,invalid-id;";
-        Visitor visitor = getVisitor(id);
-        if (checkActiveVisitors(visitor)) return "depart,duplicate;";
+        if (!isVisiting(id))return "invalid-id;";
         Visit visit = getVisit(id);
         activeVisits.remove(visit);
-
-        return "depart,"+id+","+modifiedTime.format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(modifiedTime)+";";
+        return id+","+getLibraryTime().format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(getLibraryTime())+";";
     }
 
     public String borrowBook(String id, ArrayList<String> bookID){
-        if (checkForID(id)) return "borrow,invalid-visitor-id;";
+        if (isVisiting(id)) return "invalid-visitor-id;";
         List<?> tempList = catalog.getBooks(bookID);
-        if (tempList.get(0) instanceof String) return "borrow,invalid-book-id,{"+tempList+"};";
+        if (tempList.get(0) instanceof String) return "invalid-book-id,{"+tempList+"};";
         Visitor visitor = getVisitor(id);
-        if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "borrow,book-limit-exceeded;";
-        if (visitor.getFinesOwed() > 0 ) return "borrow,outstanding-fine,"+visitor.getFinesOwed();
+        if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "book-limit-exceeded;";
+        if (visitor.getFinesOwed() > 0 ) return "outstanding-fine,"+visitor.getFinesOwed();
 
         return visitor.borrowBook((List<Book>) tempList, modifiedTime);
     }
 
     public String findBorrowedBooks(String id){
-        if (checkForID(id)) return "borrowed,invalid-vsitor-id;";
+        if (!isVisiting(id)) return "borrowed,invalid-vsitor-id;";
         Visitor visitor = getVisitor(id);
         String str = "borrowed,"+visitor.getNumBooksBorrowed();
         int i = 1;
@@ -225,7 +241,7 @@ public class Library {
     }
 
     public String returnBook(String id, ArrayList<String> bookID){
-        if (checkForID(id)) return "return,invalid-vsitor-id;";
+        if (!isVisiting(id)) return "return,invalid-vsitor-id;";
         return null;
     }
 }

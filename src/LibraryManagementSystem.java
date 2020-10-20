@@ -23,47 +23,17 @@ public class LibraryManagementSystem {
         if(response!=null) {
             //First argument is the request type
             String type = response[0].toLowerCase();
+            //Get the request type with an capitalized first letter
+            type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+            //Debug statement
             System.out.println(Arrays.toString(response));
 
-            //Switch on type of request
-            switch (type) {
-                case "register":
-                    Request register = new RegisterVisitorRequest(Library.getInstance());
-                    System.out.println(register.execute(response));
-                    break;
-                case "arrive":
-                    Request arrive = new ArriveRequest(Library.getInstance());
-                    System.out.println(arrive.execute(response));
-                    break;
-                case "depart":
-                    Request depart = new DepartRequest(Library.getInstance());
-                    System.out.println(depart.execute(response));
-                    break;
-                case "info":
-                    Request info = new InfoRequest(Library.getInstance());
-                    System.out.println(info.execute(response));
-                    break;
-                case "borrow":
-                    break;
-                case "borrowed":
-                    break;
-                case "return":
-                    break;
-                case "pay":
-                    break;
-                case "search":
-                    break;
-                case "buy":
-                    break;
-                case "advance":
-                    break;
-                case "datetime":
-                    break;
-                case "report":
-                    break;
-                default:
-                    System.out.println("Not a valid request");
-                    break;
+            try {
+                Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());
+                System.out.println(request.execute(response));
+            } catch (Exception e) {
+                System.out.println("Not a valid request");
+                e.printStackTrace();
             }
         }
     }

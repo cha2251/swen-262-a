@@ -7,11 +7,12 @@ public class DepartRequest implements Request {
 
     @Override
     public String execute(String[] args) {
+        String prefix = args[0] + ",";
         if(args.length == 2) {
             String id = args[1];
             String result = library.endVisit(id);
-            return result;
+            return prefix + result;
         }
-        return "arrive,missing-parameters,{id};";
+        return prefix + "missing-parameters,{id};";
     }
 }
