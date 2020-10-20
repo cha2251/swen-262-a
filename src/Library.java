@@ -185,6 +185,8 @@ public class Library {
         Search search = new BasicSearch(catalog);
         search = new SearchTitle(search, title);
         search = new SearchAuthor(search, authors);
+        search = new SearchISBN(search, isbn);
+        search = new SearchPublisher(search, publisher);
         List<Book> results = search.result(catalog.sortCatalog());
         return "info," +results.size() + "," + results.toString();
     }
