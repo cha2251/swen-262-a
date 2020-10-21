@@ -58,7 +58,14 @@ public class FileUtils {
 
     public void addEntry(StoredType type, String[] args) {
         StringBuilder csv = new StringBuilder();
-        csv.append(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + ",");
+        //A bunch of time stuff to match the libraries working time
+        LocalDateTime realTime = LocalDateTime.now();
+        LocalDateTime modifiedTime = LocalDateTime.parse(readProperty("ModifiedTime"),DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        long addedHours = modifiedTime.getHour();
+        long addedDays = modifiedTime.getDayOfYear();
+
+        String time = realTime.plusHours(addedHours).plusDays(addedDays).minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        csv.append(time + ",");
         csv.append(type.name() + ",");
         for(String s : args) {
             csv.append(s + ",");

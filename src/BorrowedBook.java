@@ -9,12 +9,14 @@ public class BorrowedBook {
 
     public BorrowedBook(Book book, LocalDateTime checkoutDate){
         this.book = book;
+        book.available--;
         this.checkoutDate = checkoutDate;
         this.dueDate = checkoutDate.plusDays(7);
     }
 
     public double returnBook(Book book, LocalDateTime currentDate){
         if (this.book.equals(book)){
+            book.available++;
             return checkFine(currentDate);
         }
         return -1;

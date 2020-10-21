@@ -22,7 +22,7 @@ public class Visitor {
         this.address = address;
         this.phoneNumber = phoneNumber;
 
-        borrowedBooks = new ArrayList<BorrowedBook>();
+        borrowedBooks = new ArrayList<>();
     }
 
     public String borrowBook(List<Book> books, LocalDateTime currentDate){

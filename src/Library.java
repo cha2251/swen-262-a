@@ -2,11 +2,11 @@ import utils.FileUtils;
 import utils.StoredType;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class Library {
 
@@ -393,5 +393,68 @@ public class Library {
         utils.addEntry(StoredType.PAYMENT, new String[]{id, amount});
         balance = visitor.payFine(amt);
         return "success,"+balance+";";
+    }
+
+    public String generateReport(int days) {
+        String n = ",\n";
+        int books = 0;
+        int total_visits = 0;
+        int total_visitors = 0;
+        long average_length_seconds = 0;
+        int books_purchased = 0;
+        int outstanding = 0;
+        int fines = 0;
+        LocalDateTime current = getLibraryTime();
+        List<LibraryEvent> events = readEvents();
+        //Reverse order so it is latest to oldest
+        Collections.reverse(events);
+
+        HashMap<String,LocalDateTime> vis = new HashMap<>();
+        for(LibraryEvent event : events) {
+            String[] args = event.getRequest();
+            switch(StoredType.valueOf(args[1])) {
+                case VISITOR:
+                    total_visitors++;
+                case VISIT:
+                    if(args.length==5) {
+                        LocalDateTime start = vis.remove(args[2]);
+                        LocalDateTime end = LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        average_length_seconds = addToAverage(average_length_seconds, start, end);
+                    }
+                    else {
+                        total_visits++;
+                        vis.put(args[2],LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    }
+
+                case OWNED_BOOK:
+                    books_purchased++;
+            }
+        }
+        DateTimeFormatter customTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+        return current.format(customTimeFormat) + n +
+                "Number of Books: " + books + n +
+                "Number of Visitors: " + total_visitors + n +
+                "Average Length of Visit: "+ average_length_seconds + n +
+                "Number of books purchased: "+ books_purchased + n +
+                "Fines Collected: " + fines + n +
+                "Fines Outstanding: " + outstanding;
+    }
+    public List<LibraryEvent> readEvents() {
+        List<LibraryEvent> events = new ArrayList<>();
+        List<String> raw = utils.readFromFile(new File(root + "/data/library.lbms"));
+        for(String s : raw) {
+            String[] args = s.split(",");
+            System.out.println(args[0]);
+            events.add(new LibraryEvent(LocalDate.parse(args[0],DateTimeFormatter.ISO_LOCAL_DATE),args));
+        }
+        return events;
+    }
+    private long addToAverage(long avg, LocalDateTime start, LocalDateTime end) {
+        long hours = start.until(end, ChronoUnit.HOURS );
+        long minutes = start.until(end, ChronoUnit.MINUTES );
+        long seconds = start.until(end, ChronoUnit.SECONDS );
+        System.out.println(hours + " V " + minutes + " V " + seconds);
+        return 0;
     }
 }
