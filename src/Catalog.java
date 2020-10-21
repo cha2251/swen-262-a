@@ -8,24 +8,25 @@ public class Catalog {
     private Ordering sortOrder;
 
     public Catalog(){
-        purchasableList = new ArrayList<Book>();
-        ownedList = new ArrayList<Book>();
+        purchasableList = new ArrayList<>();
+        ownedList = new ArrayList<>();
         sortOrder = new TitleOrdering();
     }
 
-   public void addBook(Book book) {
+    public void addBook(Book book) {
         purchasableList.add(book);
-        ownedList.add(book);
-        System.out.println(book.title + " published by " + book.publisher + " on " + book.publishedDate);
     }
 
-    public void buyBook(Book book){
-        ownedList.add(book);
+    public void buyBook(Book book, int amount){
+        if(!ownedList.contains(book)) {
+            ownedList.add(book);
+        }
+        book.addCopies(amount);
     }
 
     public List<?> getBooks(List<String> ids){
-        List<Book> passList = new ArrayList<Book>();
-        List<String> failList = new ArrayList<String>();
+        List<Book> passList = new ArrayList<>();
+        List<String> failList = new ArrayList<>();
         failList.addAll(ids);
         for (String id : ids) {
             for (Book book : ownedList) {
@@ -47,4 +48,5 @@ public class Catalog {
     public List sortCatalog(){
         return sortOrder.sort(ownedList);
     }
+    public List sortPurchasable() {return sortOrder.sort(purchasableList);}
 }

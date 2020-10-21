@@ -62,7 +62,12 @@ public class Library {
                     List<Book> returnBooks = (List<Book>) catalog.getBooks(returnBookID);
                     getVisitor(args[1]).returnBook(returnBooks,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     break;
-
+                case OWNED_BOOK:
+                    for(Book b : (List<Book>) catalog.sortPurchasable()) {
+                        if(b.getIsbn() == Long.parseLong(args[1])){
+                            catalog.buyBook(b,Integer.parseInt(args[2]));
+                        }
+                    }
             }
         }
     }
@@ -177,15 +182,11 @@ public class Library {
         String publishedDate = args.get(4);
         int pages = Integer.parseInt(args.get(5));
         Book book = new Book(isbn, title, authorsString, publisher, publishedDate, pages);
-        addBook(book);
+        catalog.addBook(book);
 
     }
     public boolean isUp() {
         return true;
-    }
-
-    private void addBook(Book book) {
-        catalog.addBook(book);
     }
 
     private boolean checkForVisitor(Visitor visitor){
@@ -265,14 +266,23 @@ public class Library {
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
 
-    public String search(String title, String authors, String isbn, String publisher, String sort) {
-        Search search = new BasicSearch(catalog);
+    public String search(String title, String authors, String isbn, String publisher, String sort, BookList listType) {
+        Search search = new BasicSearch(catalog, listType);
         search = new SearchTitle(search, title);
         search = new SearchAuthor(search, authors);
         search = new SearchISBN(search, isbn);
         search = new SearchPublisher(search, publisher);
         List<Book> results = search.result(catalog.sortCatalog());
-        return "info," +results.size() + "," + results.toString();
+
+        StringBuilder str = new StringBuilder();
+        queriedBooks.clear();
+        str.append(results.size()).append(",\n");
+        int index = 0;
+        for(Book b : results) {
+            queriedBooks.add(b);
+            str.append(index++).append(",").append(b.toString());
+        }
+        return str.toString();
     }
     public String endVisit(String id){
         if(getVisitor(id) == null) {
@@ -304,6 +314,27 @@ public class Library {
                     new String[]{id,String.valueOf(b.getIsbn()),time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
         }
         return visitor.borrowBook((List<Book>) tempList, time);
+    }
+
+    public String buyBook(ArrayList<String> bookID, int amount) {
+        List<String> failList = new ArrayList<>();
+        List<Book> toAdd = new ArrayList<>();
+        for(String book : bookID) {
+            try{
+                toAdd.add(queriedBooks.get(Integer.parseInt(book)));
+            }catch (Exception e){
+                failList.add(book);
+            }
+        }
+        if(failList.size() > 0) return "invalid-book-id,"+failList+";";
+        StringBuilder str = new StringBuilder();
+        str.append(toAdd.size()).append(",\n");
+        for(Book b : toAdd) {
+            catalog.buyBook(b, amount);
+            utils.addEntry(StoredType.OWNED_BOOK, new String[]{String.valueOf(b.getIsbn()),String.valueOf(amount)});
+            str.append(b.toString()).deleteCharAt(str.length()-1).append(",").append(amount);
+        }
+        return str.toString();
     }
 
     public void markRequest(Request request) {

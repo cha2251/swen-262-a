@@ -10,8 +10,8 @@ public class Book {
     String publisher;
     String publishedDate;
     int pages;
-    int copies;
-    int available;
+    int copies = 0;
+    int available = 0;
 
     public Book(long isbn, String title, String authorList, String publisher, String publishedDate, int pages) {
         this.isbn = isbn;
@@ -23,6 +23,11 @@ public class Book {
         this.authorList = new ArrayList<>();
         String[] tentativeList = improved.split(",");
         this.authorList.addAll(Arrays.asList(tentativeList));
+    }
+
+    public void addCopies(int amount) {
+        copies+=amount;
+        available+=amount;
     }
 
     public String getTitle(){

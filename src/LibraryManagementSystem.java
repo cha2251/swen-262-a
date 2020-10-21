@@ -25,8 +25,6 @@ public class LibraryManagementSystem {
             String type = response[0].toLowerCase();
             //Get the request type with an capitalized first letter
             type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
-            //Debug statement
-            System.out.println(Arrays.toString(response));
 
             try {
                 Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());
