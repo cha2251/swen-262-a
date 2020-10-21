@@ -33,39 +33,39 @@ public class Library {
     void reloadData(List<String> lines) {
         for(String line : lines) {
             String[] args = line.split(",");
-            switch(StoredType.valueOf(args[0])) {
+            switch(StoredType.valueOf(args[1])) {
                 case VISITOR:
-                    Visitor visitor = new Visitor(args[1],args[2],args[3],args[4],args[5]);
+                    Visitor visitor = new Visitor(args[2],args[3],args[4],args[5],args[6]);
                     visitorList.add(visitor);
                     break;
                 case VISIT:
-                    if(args.length > 3) {
-                        Visit visit = getVisit(args[1]);
-                        visit.getElapsedTime(LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    if(args.length > 4) {
+                        Visit visit = getVisit(args[2]);
+                        visit.getElapsedTime(LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                         activeVisits.remove(visit);
                         break;
                     }
-                    Visit visit = new Visit(getVisitor(args[1]), LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    Visit visit = new Visit(getVisitor(args[2]), LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     activeVisits.add(visit);
                     break;
                 case BORROWED_BOOK:
-                    List<String> bookID = Arrays.asList(args[2]);
+                    List<String> bookID = Arrays.asList(args[3]);
                     List<Book> books = (List<Book>) catalog.getBooks(bookID);
-                    getVisitor(args[1]).borrowBook(books,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    getVisitor(args[2]).borrowBook(books,LocalDateTime.parse(args[4],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     break;
                 case PAYMENT:
-                    Visitor user = getVisitor(args[1]);
-                    user.payFine(Double.parseDouble(args[2]));
+                    Visitor user = getVisitor(args[2]);
+                    user.payFine(Double.parseDouble(args[3]));
                     break;
                 case RETURN_BOOK:
-                    List<String> returnBookID = Arrays.asList(args[2]);
+                    List<String> returnBookID = Arrays.asList(args[3]);
                     List<Book> returnBooks = (List<Book>) catalog.getBooks(returnBookID);
-                    getVisitor(args[1]).returnBook(returnBooks,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    getVisitor(args[2]).returnBook(returnBooks,LocalDateTime.parse(args[4],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     break;
                 case OWNED_BOOK:
                     for(Book b : (List<Book>) catalog.sortPurchasable()) {
-                        if(b.getIsbn() == Long.parseLong(args[1])){
-                            catalog.buyBook(b,Integer.parseInt(args[2]));
+                        if(b.getIsbn() == Long.parseLong(args[2])){
+                            catalog.buyBook(b,Integer.parseInt(args[3]));
                         }
                     }
             }
@@ -332,7 +332,7 @@ public class Library {
         for(Book b : toAdd) {
             catalog.buyBook(b, amount);
             utils.addEntry(StoredType.OWNED_BOOK, new String[]{String.valueOf(b.getIsbn()),String.valueOf(amount)});
-            str.append(b.toString()).deleteCharAt(str.length()-1).append(",").append(amount);
+            str.append(b.toString()).deleteCharAt(str.length()-1).append(",").append(amount).append("\n");
         }
         return str.toString();
     }

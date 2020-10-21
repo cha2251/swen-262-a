@@ -13,6 +13,7 @@ public class FileUtils {
     public FileUtils(String root) {
         this.root = root;
     }
+
     public File CreateFile(String path, String name) {
         try {
             File myObj = new File(path + "/" + name);
@@ -57,6 +58,7 @@ public class FileUtils {
 
     public void addEntry(StoredType type, String[] args) {
         StringBuilder csv = new StringBuilder();
+        csv.append(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + ",");
         csv.append(type.name() + ",");
         for(String s : args) {
             csv.append(s + ",");
