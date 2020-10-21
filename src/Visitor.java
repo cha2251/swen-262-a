@@ -40,7 +40,7 @@ public class Visitor {
             for (BorrowedBook borrowedBook : borrowedBooks) {
                 status = borrowedBook.returnBook(book, currentDate);
                 if (status >= 0) {
-                    borrowedBooks.remove(borrowedBooks);
+                    borrowedBooks.remove(borrowedBook);
                     fine += status;
                     break;
                 }
