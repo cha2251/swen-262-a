@@ -34,10 +34,13 @@ public class Library {
             switch(StoredType.valueOf(args[0])) {
                 case VISITOR:
                     Visitor visitor = new Visitor(args[1],args[2],args[3],args[4],args[5]);
+                    visitorList.add(visitor);
                     break;
                 case VISIT:
-                    if(args[3].equalsIgnoreCase("DONE")) {
-                        getVisit(args[1]).getElapsedTime(LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    if(args.length > 3) {
+                        Visit visit = getVisit(args[1]);
+                        visit.getElapsedTime(LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        activeVisits.remove(visit);
                         break;
                     }
                     Visit visit = new Visit(getVisitor(args[1]), LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -89,7 +92,7 @@ public class Library {
             //Library data file
             utils.CreateFile(root, "/data/library.lbms");
         }
-        loadBooks(new File(root + "/data/books.lbms"));
+        loadBooks(new File(root + "/data/books.txt"));
     }
 
     public void shutDown() {
@@ -172,13 +175,6 @@ public class Library {
         return visitorList.contains(visitor);
     }
 
-    private boolean visitorExists(String id){
-        for(Visitor visitor : visitorList){
-            if (visitor.getId().equals(id)) return true;
-        }
-        return false;
-    }
-
     private boolean checkActiveVisitors(Visitor visitor){
         for(Visit visit : activeVisits){
             if (visit.getVisitor().equals(visitor)) return true;
@@ -189,6 +185,16 @@ public class Library {
         Visitor inQuestion = getVisitor(id);
         if(inQuestion != null) {
             return checkActiveVisitors(inQuestion);
+        }
+        return false;
+    }
+    private boolean hasActiveVisit(String id) {
+        if (getVisitor(id) != null) {
+            for(Visit visit : activeVisits){
+                if (visit.getVisitor().getId().equals(id)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -213,25 +219,31 @@ public class Library {
         String id  = ("0000000000"+str).substring(str.length());
 
         Visitor visitor = new Visitor(id, firstName, lastName, address, phoneNumber);
-        //Adding to file
-        utils.addEntry(StoredType.VISITOR, new String[]{id,firstName,lastName,address,phoneNumber});
-        utils.setProperty("currentID", String.valueOf(currentID));
 
-        if (!checkForVisitor(visitor)){
+        if (!checkForVisitor(visitor)) {
+            //Adding to file
+            utils.addEntry(StoredType.VISITOR, new String[]{id,firstName,lastName,address,phoneNumber});
+            utils.setProperty("currentID", String.valueOf(currentID));
             visitorList.add(visitor);
             return id;
         }
+        currentID--;
 
         return "register,duplicate;";
     }
 
     public String beginVisit(String id){
-        if(isVisiting(id)) {
+        if(getVisitor(id) == null) {
+            return "arrive,invalid-id;";
+        }
+        if(hasActiveVisit(id)) {
             return "arrive,duplicate;";
         }
         Visitor visitor = getVisitor(id);
+        System.out.println("Arriving: " + visitor.getId());
         LocalDateTime time = getLibraryTime();
         Visit visit = new Visit(visitor, time);
+        System.out.println("Visit: " + visit.getVisitor().getId());
         activeVisits.add(visit);
         utils.addEntry(StoredType.VISIT, new String[]{id,time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
 
@@ -248,7 +260,12 @@ public class Library {
         return "info," +results.size() + "," + results.toString();
     }
     public String endVisit(String id){
-        if (!isVisiting(id))return "invalid-id;";
+        if(getVisitor(id) == null) {
+            return "invalid-id;";
+        }
+        if(!hasActiveVisit(id)) {
+            return "invalid-id;";
+        }
         Visit visit = getVisit(id);
         activeVisits.remove(visit);
         LocalDateTime currentTime = getLibraryTime();
