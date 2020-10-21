@@ -62,7 +62,7 @@ public class FileUtils {
             csv.append(s + ",");
         }
         csv.deleteCharAt(csv.length()-1);
-        writeToFile(new File(root + "/data/library.txt"), csv.toString(), true);
+        writeToFile(new File(root + "/data/library.lbms"), csv.toString(), true);
     }
     public String readProperty(String key) {
         try {

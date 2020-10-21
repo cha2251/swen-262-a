@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class Library {
 
@@ -28,6 +27,26 @@ public class Library {
     public static Library getInstance() {
         return instance;
     }
+
+    void reloadData(List<String> lines) {
+        for(String line : lines) {
+            String[] args = line.split(",");
+            switch(StoredType.valueOf(args[0])) {
+                case VISITOR:
+                    Visitor visitor = new Visitor(args[1],args[2],args[3],args[4],args[5]);
+                    break;
+                case VISIT:
+                    if(args[3].equalsIgnoreCase("DONE")) {
+                        getVisit(args[1]).getElapsedTime(LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        break;
+                    }
+                    Visit visit = new Visit(getVisitor(args[1]), LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    activeVisits.add(visit);
+                    break;
+            }
+        }
+    }
+
 
     public void loadBooks(File file) {
         BufferedReader reader;
@@ -52,12 +71,12 @@ public class Library {
         File info = new File(root + "/data/config.properties");
         if(info.exists()) {
             //Load state from files
-            System.out.println("Restoring state");
 
             String time = utils.readProperty("ModifiedTime");
 
             modifiedTime = LocalDateTime.parse(time,DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             currentID = Integer.parseInt(utils.readProperty("currentID"));
+            reloadData(utils.readFromFile(new File(root + "/data/library.lbms")));
         }
         else {
             //First time startup
@@ -68,9 +87,9 @@ public class Library {
             utils.saveDefaults();
 
             //Library data file
-            utils.CreateFile(root, "/data/library.txt");
+            utils.CreateFile(root, "/data/library.lbms");
         }
-        loadBooks(new File(root + "/data/books.txt"));
+        loadBooks(new File(root + "/data/books.lbms"));
     }
 
     public void shutDown() {
@@ -208,7 +227,7 @@ public class Library {
 
     public String beginVisit(String id){
         if(isVisiting(id)) {
-            return "duplicate;";
+            return "arrive,duplicate;";
         }
         Visitor visitor = getVisitor(id);
         LocalDateTime time = getLibraryTime();
