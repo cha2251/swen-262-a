@@ -23,6 +23,7 @@ public class Library {
     private Catalog catalog = new Catalog();
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
+    private List<Book> queriedBooks = new ArrayList<>();
 
     public static Library getInstance() {
         return instance;
@@ -289,20 +290,43 @@ public class Library {
     }
 
     public String findBorrowedBooks(String id){
-        if (!isVisiting(id)) return "borrowed,invalid-vsitor-id;";
+        if (!isVisiting(id)) return "invalid-vsitor-id;";
+        queriedBooks.clear();
         Visitor visitor = getVisitor(id);
-        String str = "borrowed,"+visitor.getNumBooksBorrowed();
-        int i = 1;
+        String str = ""+visitor.getNumBooksBorrowed();
+        int i = 0;
         for (BorrowedBook book : visitor.findBorrowedBooks()){
-            str+="\n"+i+","+book;
-            i++;
+            str+="\n"+i+++","+book;
+            queriedBooks.add(book.getBook());
         }
         str+=";";
         return str;
     }
 
     public String returnBook(String id, ArrayList<String> bookID){
-        if (!isVisiting(id)) return "return,invalid-vsitor-id;";
-        return null;
+        if (!isVisiting(id)) return "invalid-vsitor-id;";
+        List<String> failList = new ArrayList<String>();
+        for (String bID : bookID) {
+            try{
+                queriedBooks.get(Integer.parseInt(bID));
+            }catch (IndexOutOfBoundsException e){
+                failList.add(bID);
+            }
+        }
+        if(failList.size() > 0) return "invalid-book-id,"+failList+";";
+        Visitor visitor = getVisitor(id);
+        double fine = visitor.returnBook(queriedBooks,getLibraryTime());
+        if(fine > 0) return "overdue,"+fine+";";
+        return "success;";
+    }
+
+    public String payFine(String id, String amount){
+        if (!isVisiting(id)) return "invalid-visitor-id;";
+        Visitor visitor = getVisitor(id);
+        double balance = visitor.getFinesOwed();
+        double amt = Double.parseDouble(amount);
+        if (amt < 0 || amt > balance) return "invalid-amount,"+amount+","+balance+";";
+        balance = visitor.payFine(amt);
+        return "success,"+balance+";";
     }
 }

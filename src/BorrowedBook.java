@@ -30,6 +30,10 @@ public class BorrowedBook {
         return 0;
     }
 
+    public Book getBook() {
+        return book;
+    }
+
     @Override
     public String toString() {
         return ""+book.getIsbn()+","+book.getTitle()+","+checkoutDate.format(ISO_LOCAL_DATE);
