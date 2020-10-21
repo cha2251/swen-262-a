@@ -25,7 +25,8 @@ public class Catalog {
 
     public List<?> getBooks(List<String> ids){
         List<Book> passList = new ArrayList<Book>();
-        List<String> failList = ids;
+        List<String> failList = new ArrayList<String>();
+        failList.addAll(ids);
         for (String id : ids) {
             for (Book book : ownedList) {
                 if (book.getIsbn() == Long.parseLong(id)){
