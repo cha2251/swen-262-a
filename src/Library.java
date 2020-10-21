@@ -104,10 +104,10 @@ public class Library {
         LocalDateTime realTime = LocalDateTime.now();
         long addedHours = modifiedTime.getHour();
         long addedDays = modifiedTime.getDayOfYear();
-        return realTime.plusHours(addedHours).plusDays(addedDays);
+        return realTime.plusHours(addedHours).plusDays(addedDays).minusDays(1);
 
     }
-    private LocalDateTime modifyTime(long days, long hours) {
+    public LocalDateTime modifyTime(long days, long hours) {
         //Update modified time
         modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
 
