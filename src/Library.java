@@ -1,18 +1,19 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import utils.FileUtils;
+import utils.StoredType;
+
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class Library {
 
     private static String root;
-    private static LocalDateTime epoch;
     private LocalDateTime modifiedTime;
     private static int currentID = 1;
+    private FileUtils utils;
 
     private static Library instance = new Library();
 
@@ -46,18 +47,29 @@ public class Library {
 
     public void startUp(String root) {
         this.root = root;
-        File info = new File(root + "/data/info.txt");
+        FileUtils utils = new FileUtils(root);
+        this.utils = utils;
+        File info = new File(root + "/data/config.properties");
         if(info.exists()) {
             //Load state from files
             System.out.println("Restoring state");
+
+            String time = utils.readProperty("ModifiedTime");
+
+            modifiedTime = LocalDateTime.parse(time,DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            currentID = Integer.parseInt(utils.readProperty("currentID"));
         }
         else {
             //First time startup
-            epoch = LocalDateTime.now();
-            modifiedTime = LocalDateTime.of(0,0,0,0,0);
-            System.out.println("New startup: " + epoch);
-        }
+            //Time modifications
+            modifiedTime = LocalDateTime.of(0,1,1,0,0);
 
+            //Set default properties
+            utils.saveDefaults();
+
+            //Library data file
+            utils.CreateFile(root, "/data/library.txt");
+        }
         loadBooks(new File(root + "/data/books.txt"));
     }
 
@@ -74,7 +86,14 @@ public class Library {
 
     }
     private LocalDateTime modifyTime(long days, long hours) {
+        //Update modified time
         modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
+
+        //Update in file
+        String time = modifiedTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        utils.setProperty("ModifiedTime", time);
+
+        //Return new "time"
         return getLibraryTime();
     }
 
@@ -126,11 +145,6 @@ public class Library {
         return true;
     }
 
-
-    public LocalDateTime getEpoch(){
-        return epoch;
-    }
-
     private void addBook(Book book) {
         catalog.addBook(book);
     }
@@ -176,10 +190,13 @@ public class Library {
 
 
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber){
-        String str = ""+currentID;
+        String str = ""+currentID++;
         String id  = ("0000000000"+str).substring(str.length());
 
         Visitor visitor = new Visitor(id, firstName, lastName, address, phoneNumber);
+        //Adding to file
+        utils.addEntry(StoredType.VISITOR, new String[]{id,firstName,lastName,address,phoneNumber});
+        utils.setProperty("currentID", String.valueOf(currentID));
 
         if (!checkForVisitor(visitor)){
             visitorList.add(visitor);
@@ -194,8 +211,10 @@ public class Library {
             return "duplicate;";
         }
         Visitor visitor = getVisitor(id);
-        Visit visit = new Visit(visitor, getLibraryTime());
+        LocalDateTime time = getLibraryTime();
+        Visit visit = new Visit(visitor, time);
         activeVisits.add(visit);
+        utils.addEntry(StoredType.VISIT, new String[]{id,time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
 
         return "arrive,"+id+","+visit.getStartDate()+","+visit.getStartTime()+";";
     }
@@ -213,18 +232,24 @@ public class Library {
         if (!isVisiting(id))return "invalid-id;";
         Visit visit = getVisit(id);
         activeVisits.remove(visit);
-        return id+","+getLibraryTime().format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(getLibraryTime())+";";
+        LocalDateTime currentTime = getLibraryTime();
+        utils.addEntry(StoredType.VISIT, new String[]{id,currentTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),"DONE"});
+        return id+","+currentTime.format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(currentTime)+";";
     }
 
     public String borrowBook(String id, ArrayList<String> bookID){
-        if (isVisiting(id)) return "invalid-visitor-id;";
+        if (!isVisiting(id)) return "invalid-visitor-id;";
         List<?> tempList = catalog.getBooks(bookID);
         if (tempList.get(0) instanceof String) return "invalid-book-id,{"+tempList+"};";
         Visitor visitor = getVisitor(id);
         if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "book-limit-exceeded;";
         if (visitor.getFinesOwed() > 0 ) return "outstanding-fine,"+visitor.getFinesOwed();
 
-        return visitor.borrowBook((List<Book>) tempList, modifiedTime);
+        return visitor.borrowBook((List<Book>) tempList, getLibraryTime());
+    }
+
+    public void markRequest(Request request) {
+        requests.add(request);
     }
 
     public String findBorrowedBooks(String id){

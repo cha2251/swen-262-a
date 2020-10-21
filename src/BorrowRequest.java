@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class BorrowRequest implements Request {
     private Library library;
@@ -17,8 +16,8 @@ public class BorrowRequest implements Request {
             String ids = args[2];
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
-            List<String> books = Arrays.asList(tentativeList);
-            return prefix + library.borrowBook(visitor, (ArrayList<String>) books);
+            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
+            return prefix + library.borrowBook(visitor, books);
         }
         return prefix + "visitor ID,{id};";
     }
