@@ -5,6 +5,8 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Library {
@@ -47,6 +49,10 @@ public class Library {
                     Visit visit = new Visit(getVisitor(args[1]), LocalDateTime.parse(args[2],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     activeVisits.add(visit);
                     break;
+                case BORROWED_BOOK:
+                    List<String> bookID = Arrays.asList(args[2]);
+                    List<Book> books = (List<Book>) catalog.getBooks(bookID);
+                    getVisitor(args[1]).borrowBook(books,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
             }
         }
     }
@@ -72,6 +78,7 @@ public class Library {
         this.root = root;
         FileUtils utils = new FileUtils(root);
         this.utils = utils;
+        loadBooks(new File(root + "/data/books.txt"));
         File info = new File(root + "/data/config.properties");
         if(info.exists()) {
             //Load state from files
@@ -93,7 +100,6 @@ public class Library {
             //Library data file
             utils.CreateFile(root, "/data/library.lbms");
         }
-        loadBooks(new File(root + "/data/books.txt"));
     }
 
     public void shutDown() {
@@ -241,10 +247,8 @@ public class Library {
             return "arrive,duplicate;";
         }
         Visitor visitor = getVisitor(id);
-        System.out.println("Arriving: " + visitor.getId());
         LocalDateTime time = getLibraryTime();
         Visit visit = new Visit(visitor, time);
-        System.out.println("Visit: " + visit.getVisitor().getId());
         activeVisits.add(visit);
         utils.addEntry(StoredType.VISIT, new String[]{id,time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
 
@@ -270,8 +274,10 @@ public class Library {
         Visit visit = getVisit(id);
         activeVisits.remove(visit);
         LocalDateTime currentTime = getLibraryTime();
+        //Save action to file
         utils.addEntry(StoredType.VISIT, new String[]{id,currentTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),"DONE"});
-        return id+","+currentTime.format(DateTimeFormatter.ISO_LOCAL_TIME)+","+visit.getElapsedTime(currentTime)+";";
+        DateTimeFormatter hours  = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return id+","+currentTime.format(hours)+","+visit.getElapsedTime(currentTime)+";";
     }
 
     public String borrowBook(String id, ArrayList<String> bookID){
@@ -281,8 +287,13 @@ public class Library {
         Visitor visitor = getVisitor(id);
         if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "book-limit-exceeded;";
         if (visitor.getFinesOwed() > 0 ) return "outstanding-fine,"+visitor.getFinesOwed();
-
-        return visitor.borrowBook((List<Book>) tempList, getLibraryTime());
+        //Save action to file
+        LocalDateTime time = getLibraryTime();
+        for(Book b : (List<Book>) tempList) {
+            utils.addEntry(StoredType.BORROWED_BOOK,
+                    new String[]{id,String.valueOf(b.getIsbn()),time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
+        }
+        return visitor.borrowBook((List<Book>) tempList, time);
     }
 
     public void markRequest(Request request) {

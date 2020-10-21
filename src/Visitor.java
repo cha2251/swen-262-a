@@ -1,4 +1,8 @@
+import utils.FileUtils;
+import utils.StoredType;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +13,7 @@ public class Visitor {
     private String id, firstName, lastName, address, phoneNumber;
 
     private List<BorrowedBook> borrowedBooks;
-    private double finesOwed = 10;
+    private double finesOwed = 0;
 
     public Visitor(String id, String firstName, String lastName, String address, String phoneNumber){
         this.id = id;
