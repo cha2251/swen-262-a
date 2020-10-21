@@ -319,4 +319,14 @@ public class Library {
         if(fine > 0) return "overdue,"+fine+";";
         return "success;";
     }
+
+    public String payFine(String id, String amount){
+        if (!isVisiting(id)) return "invalid-visitor-id;";
+        Visitor visitor = getVisitor(id);
+        double balance = visitor.getFinesOwed();
+        double amt = Double.parseDouble(amount);
+        if (amt < 0 || amt > balance) return "invalid-amount,"+amount+","+balance+";";
+        balance = visitor.payFine(amt);
+        return "success,"+balance+";";
+    }
 }
