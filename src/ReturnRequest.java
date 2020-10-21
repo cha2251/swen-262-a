@@ -16,6 +16,6 @@ public class ReturnRequest implements Request{
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args,2,args.length)));
             return prefix + library.returnBook(visitor, ids);
         }
-        return prefix + "visitor ID,id[,ids];";
+        return prefix + "visitor ID,id,[ids];";
     }
 }

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Library {
@@ -53,6 +52,17 @@ public class Library {
                     List<String> bookID = Arrays.asList(args[2]);
                     List<Book> books = (List<Book>) catalog.getBooks(bookID);
                     getVisitor(args[1]).borrowBook(books,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    break;
+                case PAYMENT:
+                    Visitor user = getVisitor(args[1]);
+                    user.payFine(Double.parseDouble(args[2]));
+                    break;
+                case RETURN_BOOK:
+                    List<String> returnBookID = Arrays.asList(args[2]);
+                    List<Book> returnBooks = (List<Book>) catalog.getBooks(returnBookID);
+                    getVisitor(args[1]).returnBook(returnBooks,LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    break;
+
             }
         }
     }
@@ -315,18 +325,30 @@ public class Library {
     }
 
     public String returnBook(String id, ArrayList<String> bookID){
-        if (!isVisiting(id)) return "invalid-vsitor-id;";
-        List<String> failList = new ArrayList<String>();
+        if (!isVisiting(id)) return "invalid-visitor-id;";
+        List<Book> returning = new ArrayList<>();
+        Visitor visitor = getVisitor(id);
+        queriedBooks.clear();
+        for(BorrowedBook b : visitor.findBorrowedBooks()) {
+            queriedBooks.add(b.getBook());
+        }
+        //Query all of the users borrowed books
+        List<String> failList = new ArrayList<>();
         for (String bID : bookID) {
             try{
-                queriedBooks.get(Integer.parseInt(bID));
-            }catch (IndexOutOfBoundsException e){
+                returning.add(queriedBooks.get(Integer.parseInt(bID)));
+            }catch (Exception e){
                 failList.add(bID);
             }
         }
         if(failList.size() > 0) return "invalid-book-id,"+failList+";";
-        Visitor visitor = getVisitor(id);
-        double fine = visitor.returnBook(queriedBooks,getLibraryTime());
+        LocalDateTime time = getLibraryTime();
+
+        for(Book b : returning) {
+            utils.addEntry(StoredType.RETURN_BOOK, new String[]{id,String.valueOf(b.getIsbn()),time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
+        }
+
+        double fine = visitor.returnBook(returning,time);
         if(fine > 0) return "overdue,"+fine+";";
         return "success;";
     }
@@ -337,6 +359,7 @@ public class Library {
         double balance = visitor.getFinesOwed();
         double amt = Double.parseDouble(amount);
         if (amt < 0 || amt > balance) return "invalid-amount,"+amount+","+balance+";";
+        utils.addEntry(StoredType.PAYMENT, new String[]{id, amount});
         balance = visitor.payFine(amt);
         return "success,"+balance+";";
     }

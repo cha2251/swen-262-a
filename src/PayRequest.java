@@ -11,7 +11,6 @@ public class PayRequest implements Request{
         if(args.length == 3) {
             String visitor = args[1];
             String amount = args[2];
-
             return prefix + library.payFine(visitor,amount);
         }
         return prefix + "visitor ID,amount;";
