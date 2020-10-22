@@ -436,6 +436,8 @@ public class Library {
                         books+=Integer.parseInt(args[3]);
                         books_purchased++;
                         break;
+                    case PAYMENT:
+                        fines+=Integer.parseInt(args[3]);
                 }
             }
         }
@@ -447,11 +449,14 @@ public class Library {
         String hour = ("00"+numberOfHours).substring(numberOfHours.length());
         String minute = ("00"+numberOfMinutes).substring(numberOfMinutes.length());
         String second = ("00"+numberOfSeconds).substring(numberOfSeconds.length());
+        for(Visitor v : visitorList) {
+            outstanding+=v.getFinesOwed();
+        }
         return current.format(customTimeFormat) + n +
                 "Number of Books: " + books + n +
                 "Number of Visitors: " + total_visitors + n +
                 "Average Length of Visit: "+ hour +":"+minute+":"+second + n +
-                "Number of books purchased: "+ books_purchased + n +
+                "Number of Books purchased: "+ books_purchased + n +
                 "Fines Collected: " + fines + n +
                 "Fines Outstanding: " + outstanding;
     }
