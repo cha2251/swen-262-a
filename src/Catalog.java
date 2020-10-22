@@ -25,7 +25,24 @@ public class Catalog {
         book.addCopies(amount);
     }
 
-    public List<?> getBooks(List<String> ids) {
+    public List<?> getBooks(List<String> ids){
+        List<Book> passList = new ArrayList<>();
+        List<String> failList = new ArrayList<>();
+        failList.addAll(ids);
+        for (String id : ids) {
+            for (Book book : ownedList) {
+                if (book.getIsbn() == Long.parseLong(id)){
+                    passList.add(book);
+                    failList.remove(id);
+                    break;
+                }
+            }
+        }
+        if(failList.size() > 0) return failList;
+        return passList;
+    }
+
+    public List<?> checkBooks(List<String> ids) {
         List<Book> books = new ArrayList<>();
         List<String> failList = new ArrayList<>();
         for (String bID : ids) {

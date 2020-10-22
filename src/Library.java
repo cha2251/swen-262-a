@@ -2,6 +2,7 @@ import utils.FileUtils;
 import utils.StoredType;
 
 import java.io.*;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -17,6 +18,7 @@ public class Library {
     private FileUtils utils;
 
     private static Library instance = new Library();
+    private NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
     private ArrayList<Request> requests = new ArrayList<>();
 
@@ -34,6 +36,7 @@ public class Library {
     void reloadData(List<String> lines) {
         for(String line : lines) {
             String[] args = line.split(",");
+            System.out.println(args[1]);
             switch(StoredType.valueOf(args[1])) {
                 case VISITOR:
                     Visitor visitor = new Visitor(args[2],args[3],args[4],args[5],args[6]);
@@ -303,11 +306,11 @@ public class Library {
 
     public String borrowBook(String id, ArrayList<String> bookID){
         if (!isVisiting(id)) return "invalid-visitor-id;";
-        List<?> tempList = catalog.getBooks(bookID);
+        List<?> tempList = catalog.checkBooks(bookID);
         if (tempList.get(0) instanceof String) return "invalid-book-id,{"+tempList+"};";
         Visitor visitor = getVisitor(id);
         if (visitor.getNumBooksBorrowed()+bookID.size() > 5) return "book-limit-exceeded;";
-        if (visitor.getFinesOwed() > 0 ) return "outstanding-fine,"+visitor.getFinesOwed();
+        if (visitor.getFinesOwed() > 0 ) return "outstanding-fine,"+format.format(visitor.getFinesOwed());
         //Save action to file
         LocalDateTime time = getLibraryTime();
         for(Book b : (List<Book>) tempList) {
@@ -381,7 +384,7 @@ public class Library {
         }
 
         double fine = visitor.returnBook(returning,time);
-        if(fine > 0) return "overdue,"+fine+";";
+        if(fine > 0) return "overdue,"+format.format(fine)+";";
         return "success;";
     }
 
@@ -390,10 +393,10 @@ public class Library {
         Visitor visitor = getVisitor(id);
         double balance = visitor.getFinesOwed();
         double amt = Double.parseDouble(amount);
-        if (amt < 0 || amt > balance) return "invalid-amount,"+amount+","+balance+";";
+        if (amt < 0 || amt > balance) return "invalid-amount,"+format.format(amt)+","+format.format(balance)+";";
         utils.addEntry(StoredType.PAYMENT, new String[]{id, amount});
         balance = visitor.payFine(amt);
-        return "success,"+balance+";";
+        return "success,"+format.format(balance)+";";
     }
 
     int total_visits = 0;
@@ -457,8 +460,8 @@ public class Library {
                 "Number of Visitors: " + total_visitors + n +
                 "Average Length of Visit: "+ hour +":"+minute+":"+second + n +
                 "Number of Books purchased: "+ books_purchased + n +
-                "Fines Collected: " + fines + n +
-                "Fines Outstanding: " + outstanding;
+                "Fines Collected: " + format.format(fines) + n +
+                "Fines Outstanding: " + format.format(outstanding);
     }
     public List<LibraryEvent> readEvents() {
         List<LibraryEvent> events = new ArrayList<>();
