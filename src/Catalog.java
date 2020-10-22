@@ -61,11 +61,11 @@ public class Catalog {
     }
 
     public List sortCatalog(){
-        return sortOrder.sort(ownedList);
+        sortedList = sortOrder.sort(ownedList);
+        return sortedList;
     }
 
     public List sortPurchasable() {
-        sortedList = sortOrder.sort(purchasableList);
-        return sortedList;
+        return sortOrder.sort(purchasableList);
     }
 }
