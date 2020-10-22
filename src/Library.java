@@ -438,6 +438,7 @@ public class Library {
                         break;
                     case PAYMENT:
                         fines+=Integer.parseInt(args[3]);
+                        break;
                 }
             }
         }
