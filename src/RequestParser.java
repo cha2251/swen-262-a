@@ -1,9 +1,17 @@
 import java.util.ArrayList;
 
+/**
+ * A class that parses strings into requests
+ */
 public class RequestParser {
 
     StringBuilder current;
 
+    /**
+     * Converts a list of strings into a string array
+     * @param arr
+     * @return
+     */
     public static String[] GetStringArray(ArrayList<String> arr) {
 
         // declaration and initialise String Array
@@ -19,6 +27,11 @@ public class RequestParser {
         return str;
     }
 
+    /**
+     * Converts a string into an array of commands
+     * @param input
+     * @return
+     */
     public String[] parseRequest(String input) {
         if (current == null) {
             current = new StringBuilder();
@@ -39,6 +52,11 @@ public class RequestParser {
         return null;
     }
 
+    /**
+     * Converts a string into a StringBuilder for parsing
+     * @param s
+     * @return
+     */
     public String[] finalize(String s) {
         ArrayList<String> args = new ArrayList<>();
         current = new StringBuilder();
