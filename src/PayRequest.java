@@ -1,10 +1,24 @@
 public class PayRequest implements Request {
+
+    /*
+    Used for the string formatting of when a visitor pays a fine
+     */
+
     private Library library;
 
+    /**
+     * Instantiates Library in this class
+     * @param library
+     */
     public PayRequest(Library library) {
         this.library = library;
     }
 
+    /**
+     * Returns a formatted string for a visitor payment
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
