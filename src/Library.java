@@ -4,6 +4,7 @@ import utils.StoredType;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -411,26 +412,31 @@ public class Library {
 
         HashMap<String,LocalDateTime> vis = new HashMap<>();
         for(LibraryEvent event : events) {
-            String[] args = event.getRequest();
-            switch(StoredType.valueOf(args[1])) {
-                case VISITOR:
-                    total_visitors++;
-                    break;
-                case VISIT:
-                    if(args.length==5) {
-                        LocalDateTime start = vis.remove(args[2]);
-                        LocalDateTime end = LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                        addToAverage(start, end);
-                    }
-                    else {
-                        total_visits++;
-                        vis.put(args[2],LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-                    }
-                    break;
-                case OWNED_BOOK:
-                    books+=Integer.parseInt(args[3]);
-                    books_purchased++;
-                    break;
+            if(days == -1 || event.getTime().isAfter(ChronoLocalDate.from(current.minusDays(days))) || event.getTime().isEqual(ChronoLocalDate.from(current.minusDays(days)))) {
+                String[] args = event.getRequest();
+                switch(StoredType.valueOf(args[1])) {
+                    case VISITOR:
+                        total_visitors++;
+                        break;
+                    case VISIT:
+                        if(args.length==5) {
+                            if(!vis.containsKey(args[2])) {
+                                break;
+                            }
+                            LocalDateTime start = vis.remove(args[2]);
+                            LocalDateTime end = LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                            addToAverage(start, end);
+                        }
+                        else {
+                            total_visits++;
+                            vis.put(args[2],LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                        }
+                        break;
+                    case OWNED_BOOK:
+                        books+=Integer.parseInt(args[3]);
+                        books_purchased++;
+                        break;
+                }
             }
         }
         DateTimeFormatter customTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
