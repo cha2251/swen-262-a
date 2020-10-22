@@ -345,7 +345,7 @@ public class Library {
         requests.add(request);
     }
 
-    //Returns a string of
+    //Returns a string of the books a visitor has borrowed
     public String findBorrowedBooks(String id){
         if (!isVisiting(id)) return "invalid-vsitor-id;";
         queriedBooks.clear();

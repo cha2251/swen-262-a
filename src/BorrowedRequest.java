@@ -1,5 +1,9 @@
 public class BorrowedRequest implements Request{
 
+    /*
+    This class is used for string formatting of borrowed books
+     */
+
     private Library library;
 
     //Instantiates Library in this class
@@ -7,7 +11,7 @@ public class BorrowedRequest implements Request{
         this.library = library;
     }
 
-    //Returns a string of the formatted notification someone has arrived.
+    //Returns a formatted string of borrowed books from a visitor
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
