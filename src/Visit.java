@@ -4,32 +4,61 @@ import java.time.temporal.ChronoUnit;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 
+/**
+ * Visit class stores information about a library visit
+ */
 public class Visit {
     private Visitor visitor;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public Visit(Visitor v, LocalDateTime date) {
+    /**
+     * Constructor.
+     * @param v
+     * @param date
+     */
+    public Visit(Visitor v, LocalDateTime date){
         visitor = v;
         startDate = date;
     }
 
-    public String getStartDate() {
+    /**
+     * returns the set start date for the visit
+     * @return
+     */
+    public String getStartDate(){
         return startDate.format(ISO_LOCAL_DATE);
     }
 
-    public String getStartTime() {
+    /**
+     * returns the set start time for the visit
+     * @return
+     */
+    public String getStartTime(){
         return startDate.format(ISO_LOCAL_TIME);
     }
 
+    /**
+     * returns the visitor this visit belongs to
+     * @return
+     */
     public Visitor getVisitor() {
         return visitor;
     }
 
+    /**
+     * returns the length of the visit
+     * @return
+     */
     public LocalDateTime getVisitLength() {
         return null;
     }
 
+    /**
+     * returns the amount of time from the start time until a given time
+     * @param currentDate
+     * @return
+     */
     public String getElapsedTime(LocalDateTime currentDate) {
         endDate = currentDate;
         long hours = startDate.until(currentDate, ChronoUnit.HOURS);

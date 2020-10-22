@@ -1,10 +1,17 @@
-public class InfoRequest implements Request {
+public class InfoRequest implements Request{
+
+    /*
+    this class is used for the formatting book information
+     */
+
     private Library library;
 
+    //Instantiates Library in this class
     public InfoRequest(Library library) {
         this.library = library;
     }
 
+    //Returns a formatted string for information on a book
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";

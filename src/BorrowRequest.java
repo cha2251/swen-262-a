@@ -2,12 +2,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BorrowRequest implements Request {
+
+    /*
+    this class is used for the formatting of requests to borrow books
+     */
+
     private Library library;
 
+    //Instantiates Library in this class
     public BorrowRequest(Library library) {
         this.library = library;
     }
 
+    //Returns a formatted string for a borrow request of books from a visitor
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
