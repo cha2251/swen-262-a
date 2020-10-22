@@ -6,12 +6,19 @@ public class AdvanceRequest implements Request {
 
     private Library library;
 
-    //Instantiates Library in this class
+    /**
+     Instantiates Library in this class
+     @param library
+     **/
     public AdvanceRequest(Library library) {
         this.library = library;
     }
 
-    //Advances time by the specified amount of time
+    /**
+     * Advances time by the specified amount of time
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";

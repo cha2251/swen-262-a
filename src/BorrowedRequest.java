@@ -6,12 +6,19 @@ public class BorrowedRequest implements Request {
 
     private Library library;
 
-    //Instantiates Library in this class
+    /**
+     Instantiates Library in this class
+     @param library
+     */
     public BorrowedRequest(Library library) {
         this.library = library;
     }
 
-    //Returns a formatted string of borrowed books from a visitor
+    /**
+     * Returns a formatted string of borrowed books from a visitor
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";

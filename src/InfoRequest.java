@@ -6,12 +6,19 @@ public class InfoRequest implements Request{
 
     private Library library;
 
-    //Instantiates Library in this class
+    /**
+     Instantiates Library in this class
+     @param library
+     */
     public InfoRequest(Library library) {
         this.library = library;
     }
 
-    //Returns a formatted string for information on a book
+    /**
+     * Returns a formatted string for information on a book
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";

@@ -12,8 +12,8 @@ public class Catalog {
     private Ordering sortOrder;
     private List sortedList;
 
-    /*
-    Creates a new catalog
+    /**
+     * Creates a new catalog
      */
     public Catalog(){
         purchasableList = new ArrayList<>();
@@ -21,15 +21,18 @@ public class Catalog {
         sortOrder = new TitleOrdering();
     }
 
-    /*
-    Adds a book to the list of purchasable books
+    /**
+     * Adds a book to the list of purchasable books
+     * @param book
      */
     public void addBook(Book book) {
         purchasableList.add(book);
     }
 
-    /*
-    adds the specified amount of copies of the book to the list of books you own
+    /**
+     * adds the specified amount of copies of the book to the list of books you own
+     * @param book
+     * @param amount
      */
     public void buyBook(Book book, int amount){
         if(!ownedList.contains(book)) {
@@ -38,9 +41,11 @@ public class Catalog {
         book.addCopies(amount);
     }
 
-    /*
-    Checks the list of books you own against a list provided, if you own all own all the books, it returns the full list
-    otherwise it returns a list of the ones you do not own.
+    /**
+     * Checks the list of books you own against a list provided, if you own all own all the books, it returns the full list
+     * otherwise it returns a list of the ones you do not own.
+     * @param ids
+     * @return
      */
     public List<?> getBooks(List<String> ids){
         List<Book> passList = new ArrayList<>();
@@ -59,9 +64,11 @@ public class Catalog {
         return passList;
     }
 
-    /*
-    Tries to get a list of books from a sorted list, returns either all books not on the list, or a list of every book
-    if all were on the list
+    /**
+     * Tries to get a list of books from a sorted list, returns either all books not on the list, or a list of every book
+     * if all were on the list
+     * @param ids
+     * @return
      */
     public List<?> checkBooks(List<String> ids) {
         List<Book> books = new ArrayList<>();
@@ -76,24 +83,27 @@ public class Catalog {
         if (failList.size() > 0) return failList;
         return books;
     }
-    /*
-    Sets our sort order
-     */
 
+    /**
+     * Sets our sort order
+     * @param newOrdering
+     */
     public void setSortOrder(Ordering newOrdering) {
         sortOrder = newOrdering;
     }
 
-    /*
-    Used to sort the owned list in the sort order
+    /**
+     * Used to sort the owned list in the sort order
+     * @return
      */
     public List sortCatalog(){
         sortedList = sortOrder.sort(ownedList);
         return sortedList;
     }
 
-    /*
-    Used to sort the purchasable list in the sort order
+    /**
+     * Used to sort the purchasable list in the sort order
+     * @return
      */
     public List sortPurchasable() {
         return sortOrder.sort(purchasableList);

@@ -9,13 +9,21 @@ public class BasicSearch implements Search {
     private Catalog catalog;
     private BookList listType;
 
-    //Gets the catalog and list that is being used
+    /**
+     * Gets the catalog and list that is being used
+     * @param catalog
+     * @param listType
+     */
     BasicSearch(Catalog catalog, BookList listType) {
         this.catalog = catalog;
         this.listType = listType;
     }
 
-    //Sorts the catalog based on what type of list it is and returns that sorted list
+    /**
+     * Sorts the catalog based on what type of list it is and returns that sorted list
+     * @param books
+     * @return
+     */
     @Override
     public List result(List<Book> books) {
         switch (listType) {
