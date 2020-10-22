@@ -6,12 +6,19 @@ public class ArriveRequest implements Request {
 
     private Library library;
 
-    //Instantiates Library in this class
+    /**
+     Instantiates Library in this class
+     @param library
+     */
     public ArriveRequest(Library library) {
         this.library = library;
     }
 
-    //Returns a string of the formatted notification someone has arrived.
+    /**
+     * Returns a string of the formatted notification someone has arrived.
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         if(args.length == 2) {

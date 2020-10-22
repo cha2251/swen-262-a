@@ -18,8 +18,15 @@ public class Book {
     int copies = 0;
     int available = 0;
 
-    /*
-    Used for the creation of a new book, includes all necessary information on the book
+
+    /**
+     * Used for the creation of a new book, includes all necessary information on the book
+     * @param isbn
+     * @param title
+     * @param authorList
+     * @param publisher
+     * @param publishedDate
+     * @param pages
      */
     public Book(long isbn, String title, String authorList, String publisher, String publishedDate, int pages) {
         this.isbn = isbn;
@@ -33,37 +40,47 @@ public class Book {
         this.authorList.addAll(Arrays.asList(tentativeList));
     }
 
-    /*
-    Increases total copies and amount available of a book by 1
+
+
+    /**
+     * Increases total copies and amount available of a book by 1
+     * @param amount
      */
     public void addCopies(int amount) {
         copies+=amount;
         available+=amount;
     }
-    /*
-    Returns a String of the title of the Book
+
+
+    /**
+     * Returns a String of the title of the Book
+     * @return
      */
     public String getTitle(){
         return title;
     }
 
-    /*
-    Returns a long of the ISBN# of the book
-    */
+    /**
+     * Returns a long of the ISBN# of the book
+     * @return
+     */
     public long getIsbn() {
         return isbn;
     }
 
-    /*
-    Formatting for default of how to print the info of a book
+    /**
+     * Formatting for default of how to print the info of a book
+     * @return
      */
     @Override
     public String toString() {
         return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate +","+ pages +"\n";
     }
 
-    /*
-    How to check equivalnce between books
+    /**
+     * How to check equivalnce between books
+     * @param o
+     * @return
      */
     @Override
     public boolean equals(Object o) {
