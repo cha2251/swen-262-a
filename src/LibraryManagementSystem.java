@@ -2,9 +2,17 @@ import java.util.Scanner;
 
 public class LibraryManagementSystem {
 
+    /**
+     * This class is the main class handling the creation and maintaince of library
+     */
     static String root;
     static RequestParser parser = new RequestParser();
 
+    /**
+     * The main function of the system, calls for creation and start up of library,
+     * as wellas checking for input
+     * @param args
+     */
     public static void main(String[] args) {
         root = System.getProperty("user.dir");
         Library library = Library.getInstance();
@@ -17,6 +25,10 @@ public class LibraryManagementSystem {
         }
     }
 
+    /**
+     * Parses and handles requests
+     * @param input
+     */
     public static void handle(String input) {
         String[] response = parser.parseRequest(input);
         if (response != null) {
