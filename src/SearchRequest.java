@@ -1,10 +1,22 @@
+/**
+ *Implements a request for search results
+ */
 public class SearchRequest implements Request {
     private Library library;
 
+    /**
+     * Constructor
+     * @param library
+     */
     public SearchRequest(Library library) {
         this.library = library;
     }
 
+    /**
+     * Breaks up a request string for parsing
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
