@@ -21,23 +21,23 @@ public class AdvanceRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0]+",";
+        String prefix = args[0] + ",";
         //If days are between the range
         long days = Long.parseLong(args[1]);
-        if(0 > days || days > 7) {
-            return prefix+"invalid-number-of-days," + days+";";
+        if (0 > days || days > 7) {
+            return prefix + "invalid-number-of-days," + days + ";";
         }
         //If hours is defined
-        if(args.length == 3) {
+        if (args.length == 3) {
             //If hours are between the range
             long hours = Long.parseLong(args[2]);
-            if(0 > hours || hours > 23) {
-                return prefix+"invalid-number-of-hours," + hours+";";
+            if (0 > hours || hours > 23) {
+                return prefix + "invalid-number-of-hours," + hours + ";";
             }
-            library.modifyTime(days,hours);
-            return prefix+"success";
+            library.modifyTime(days, hours);
+            return prefix + "success";
         }
-        library.modifyTime(days,0);
-        return prefix+"success";
+        library.modifyTime(days, 0);
+        return prefix + "success";
     }
 }

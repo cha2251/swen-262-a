@@ -67,6 +67,6 @@ public class BorrowedBook {
      */
     @Override
     public String toString() {
-        return ""+book.getIsbn()+","+book.getTitle()+","+checkoutDate.format(ISO_LOCAL_DATE);
+        return "" + book.getIsbn() + "," + book.getTitle() + "," + checkoutDate.format(ISO_LOCAL_DATE);
     }
 }

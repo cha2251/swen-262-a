@@ -53,14 +53,14 @@ public class Catalog {
         failList.addAll(ids);
         for (String id : ids) {
             for (Book book : ownedList) {
-                if (book.getIsbn() == Long.parseLong(id)){
+                if (book.getIsbn() == Long.parseLong(id)) {
                     passList.add(book);
                     failList.remove(id);
                     break;
                 }
             }
         }
-        if(failList.size() > 0) return failList;
+        if (failList.size() > 0) return failList;
         return passList;
     }
 
@@ -88,7 +88,7 @@ public class Catalog {
      * Sets our sort order
      * @param newOrdering
      */
-    public void setSortOrder(Ordering newOrdering){
+    public void setSortOrder(Ordering newOrdering) {
         sortOrder = newOrdering;
     }
 

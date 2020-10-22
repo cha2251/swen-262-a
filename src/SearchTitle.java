@@ -27,12 +27,12 @@ public class SearchTitle extends SearchModifier {
         List<Book> toReturn = new ArrayList<>();
         List<Book> toPrune = super.result(book);
         //User opted for no title searches
-        if(title.equals("*")) {
+        if (title.equals("*")) {
             return toPrune;
         }
         //User wants to search for title
-        for(Book b : toPrune) {
-            if(b.title.equalsIgnoreCase(title)) {
+        for (Book b : toPrune) {
+            if (b.title.equalsIgnoreCase(title)) {
                 toReturn.add(b);
             }
         }

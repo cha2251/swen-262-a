@@ -1,11 +1,6 @@
-import utils.FileUtils;
-import utils.StoredType;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -22,13 +17,14 @@ public class Visitor {
 
     /**
      * Constructor
+     *
      * @param id
      * @param firstName
      * @param lastName
      * @param address
      * @param phoneNumber
      */
-    public Visitor(String id, String firstName, String lastName, String address, String phoneNumber){
+    public Visitor(String id, String firstName, String lastName, String address, String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,12 +36,13 @@ public class Visitor {
 
     /**
      * adds a number of books to the visitor's list of book rentals
+     *
      * @param books
      * @param currentDate
      * @return
      */
-    public String borrowBook(List<Book> books, LocalDateTime currentDate){
-        for(Book book : books){
+    public String borrowBook(List<Book> books, LocalDateTime currentDate) {
+        for (Book book : books) {
             borrowedBooks.add(new BorrowedBook(book, currentDate));
         }
 
@@ -54,14 +51,16 @@ public class Visitor {
 
     /**
      * returns list of borrowed books
+     *
      * @return
      */
-    public List<BorrowedBook> findBorrowedBooks(){
+    public List<BorrowedBook> findBorrowedBooks() {
         return borrowedBooks;
     }
 
     /**
      * returns a book to the library (removes from rentals list)
+     *
      * @param books
      * @param currentDate
      * @return
@@ -85,17 +84,19 @@ public class Visitor {
 
     /**
      * pays an amount toward the visitor's fines
+     *
      * @param amount
      * @return
      */
-    public double payFine(double amount){
-        if (amount > finesOwed || amount < 0)return -1;
+    public double payFine(double amount) {
+        if (amount > finesOwed || amount < 0) return -1;
         finesOwed -= amount;
         return finesOwed;
     }
 
     /**
      * returns visitor id
+     *
      * @return
      */
     public String getId() {
@@ -104,14 +105,16 @@ public class Visitor {
 
     /**
      * returns current number of borrowed books
+     *
      * @return
      */
-    public int getNumBooksBorrowed(){
+    public int getNumBooksBorrowed() {
         return borrowedBooks.size();
     }
 
     /**
      * returns amount of fines owed
+     *
      * @return
      */
     public double getFinesOwed() {
@@ -120,6 +123,7 @@ public class Visitor {
 
     /**
      * Comparator, sees if one visitor object is identical to another one
+     *
      * @param o
      * @return
      */

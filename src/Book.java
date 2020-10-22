@@ -47,8 +47,8 @@ public class Book {
      * @param amount
      */
     public void addCopies(int amount) {
-        copies+=amount;
-        available+=amount;
+        copies += amount;
+        available += amount;
     }
 
 
@@ -74,7 +74,7 @@ public class Book {
      */
     @Override
     public String toString() {
-        return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate +","+ pages +"\n";
+        return isbn + "," + title + "," + authorList.toString() + "," + publisher + "," + publishedDate + "," + pages + "\n";
     }
 
     /**

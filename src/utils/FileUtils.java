@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class FileUtils {
     final String root;
+
     public FileUtils(String root) {
         this.root = root;
     }
@@ -28,6 +29,7 @@ public class FileUtils {
             return null;
         }
     }
+
     public void writeToFile(File file, String content, boolean append) {
         try {
             BufferedWriter myWriter = new BufferedWriter(new FileWriter(file, append));
@@ -60,19 +62,20 @@ public class FileUtils {
         StringBuilder csv = new StringBuilder();
         //A bunch of time stuff to match the libraries working time
         LocalDateTime realTime = LocalDateTime.now();
-        LocalDateTime modifiedTime = LocalDateTime.parse(readProperty("ModifiedTime"),DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime modifiedTime = LocalDateTime.parse(readProperty("ModifiedTime"), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         long addedHours = modifiedTime.getHour();
         long addedDays = modifiedTime.getDayOfYear();
 
         String time = realTime.plusHours(addedHours).plusDays(addedDays).minusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
         csv.append(time + ",");
         csv.append(type.name() + ",");
-        for(String s : args) {
+        for (String s : args) {
             csv.append(s + ",");
         }
-        csv.deleteCharAt(csv.length()-1);
+        csv.deleteCharAt(csv.length() - 1);
         writeToFile(new File(root + "/data/library.lbms"), csv.toString(), true);
     }
+
     public String readProperty(String key) {
         try {
             FileReader reader = new FileReader(root + "/data/config.properties");
@@ -84,12 +87,13 @@ public class FileUtils {
         }
         return "FAIL";
     }
+
     public void setProperty(String key, String value) {
         try {
             FileReader reader = new FileReader(root + "/data/config.properties");
             Properties props = new Properties();
             props.load(reader);
-            props.setProperty(key,value);
+            props.setProperty(key, value);
 
             File configFile = new File(root + "/data/config.properties");
             FileWriter writer = new FileWriter(configFile);
@@ -98,6 +102,7 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
     public void saveDefaults() {
         try {
             Properties defaultProperties = new Properties();
@@ -108,8 +113,7 @@ public class FileUtils {
             File configFile = new File(root + "/data/config.properties");
             FileWriter writer = new FileWriter(configFile);
             defaultProperties.store(writer, "LBMS Properties");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

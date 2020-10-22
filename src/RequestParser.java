@@ -3,12 +3,28 @@ import java.util.ArrayList;
 public class RequestParser {
 
     StringBuilder current;
+
+    public static String[] GetStringArray(ArrayList<String> arr) {
+
+        // declaration and initialise String Array
+        String[] str = new String[arr.size()];
+
+        // ArrayList to Array Conversion
+        for (int j = 0; j < arr.size(); j++) {
+
+            // Assign each value to String array
+            str[j] = arr.get(j);
+        }
+
+        return str;
+    }
+
     public String[] parseRequest(String input) {
-        if(current == null) {
+        if (current == null) {
             current = new StringBuilder();
         }
         char[] characters = input.toCharArray();
-        for(char character : characters) {
+        for (char character : characters) {
             switch (character) {
                 case ';':
                     String finished = current.toString();
@@ -22,14 +38,15 @@ public class RequestParser {
         }
         return null;
     }
+
     public String[] finalize(String s) {
         ArrayList<String> args = new ArrayList<>();
         current = new StringBuilder();
         boolean inBrackets = false;
-        for(char character : s.toCharArray()) {
+        for (char character : s.toCharArray()) {
             switch (character) {
                 case ',':
-                    if(inBrackets) {
+                    if (inBrackets) {
                         current.append(character);
                         break;
                     }
@@ -52,20 +69,5 @@ public class RequestParser {
         args.add(current.toString());
         current = new StringBuilder();
         return GetStringArray(args);
-    }
-    public static String[] GetStringArray(ArrayList<String> arr)
-    {
-
-        // declaration and initialise String Array
-        String str[] = new String[arr.size()];
-
-        // ArrayList to Array Conversion
-        for (int j = 0; j < arr.size(); j++) {
-
-            // Assign each value to String array
-            str[j] = arr.get(j);
-        }
-
-        return str;
     }
 }

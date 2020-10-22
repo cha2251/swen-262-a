@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class LibraryManagementSystem {
@@ -20,11 +19,11 @@ public class LibraryManagementSystem {
 
     public static void handle(String input) {
         String[] response = parser.parseRequest(input);
-        if(response!=null) {
+        if (response != null) {
             //First argument is the request type
             String type = response[0].toLowerCase();
             //Get the request type with an capitalized first letter
-            type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+            type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
 
             try {
                 Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());

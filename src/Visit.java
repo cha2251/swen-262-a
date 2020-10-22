@@ -1,7 +1,8 @@
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static java.time.format.DateTimeFormatter.*;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 
 /**
  * Visit class stores information about a library visit
@@ -60,9 +61,9 @@ public class Visit {
      */
     public String getElapsedTime(LocalDateTime currentDate) {
         endDate = currentDate;
-        long hours = startDate.until( currentDate, ChronoUnit.HOURS );
-        long minutes = startDate.until( currentDate, ChronoUnit.MINUTES );
-        long seconds = startDate.until( currentDate, ChronoUnit.SECONDS );
-        return ""+hours+":"+minutes+":"+seconds;
+        long hours = startDate.until(currentDate, ChronoUnit.HOURS);
+        long minutes = startDate.until(currentDate, ChronoUnit.MINUTES);
+        long seconds = startDate.until(currentDate, ChronoUnit.SECONDS);
+        return "" + hours + ":" + minutes + ":" + seconds;
     }
 }
