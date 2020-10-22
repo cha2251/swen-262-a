@@ -395,19 +395,19 @@ public class Library {
         return "success,"+balance+";";
     }
 
+    int total_visits = 0;
+    long length_seconds = 0;
+    long average_length_seconds = 0;
     public String generateReport(int days) {
         String n = ",\n";
         int books = 0;
-        int total_visits = 0;
         int total_visitors = 0;
-        long average_length_seconds = 0;
         int books_purchased = 0;
         int outstanding = 0;
         int fines = 0;
         LocalDateTime current = getLibraryTime();
         List<LibraryEvent> events = readEvents();
-        //Reverse order so it is latest to oldest
-        Collections.reverse(events);
+
 
         HashMap<String,LocalDateTime> vis = new HashMap<>();
         for(LibraryEvent event : events) {
@@ -415,27 +415,36 @@ public class Library {
             switch(StoredType.valueOf(args[1])) {
                 case VISITOR:
                     total_visitors++;
+                    break;
                 case VISIT:
                     if(args.length==5) {
                         LocalDateTime start = vis.remove(args[2]);
                         LocalDateTime end = LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                        average_length_seconds = addToAverage(average_length_seconds, start, end);
+                        addToAverage(start, end);
                     }
                     else {
                         total_visits++;
                         vis.put(args[2],LocalDateTime.parse(args[3],DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     }
-
+                    break;
                 case OWNED_BOOK:
+                    books+=Integer.parseInt(args[3]);
                     books_purchased++;
+                    break;
             }
         }
         DateTimeFormatter customTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
+        String numberOfHours = String.valueOf((average_length_seconds % 86400 ) / 3600);
+        String numberOfMinutes = String.valueOf(((average_length_seconds % 86400 ) % 3600 ) / 60);
+        String numberOfSeconds = String.valueOf(((average_length_seconds % 86400 ) % 3600 ) % 60);
+        String hour = ("00"+numberOfHours).substring(numberOfHours.length());
+        String minute = ("00"+numberOfMinutes).substring(numberOfMinutes.length());
+        String second = ("00"+numberOfSeconds).substring(numberOfSeconds.length());
         return current.format(customTimeFormat) + n +
                 "Number of Books: " + books + n +
                 "Number of Visitors: " + total_visitors + n +
-                "Average Length of Visit: "+ average_length_seconds + n +
+                "Average Length of Visit: "+ hour +":"+minute+":"+second + n +
                 "Number of books purchased: "+ books_purchased + n +
                 "Fines Collected: " + fines + n +
                 "Fines Outstanding: " + outstanding;
@@ -445,16 +454,13 @@ public class Library {
         List<String> raw = utils.readFromFile(new File(root + "/data/library.lbms"));
         for(String s : raw) {
             String[] args = s.split(",");
-            System.out.println(args[0]);
             events.add(new LibraryEvent(LocalDate.parse(args[0],DateTimeFormatter.ISO_LOCAL_DATE),args));
         }
         return events;
     }
-    private long addToAverage(long avg, LocalDateTime start, LocalDateTime end) {
-        long hours = start.until(end, ChronoUnit.HOURS );
-        long minutes = start.until(end, ChronoUnit.MINUTES );
+    private void addToAverage(LocalDateTime start, LocalDateTime end) {
         long seconds = start.until(end, ChronoUnit.SECONDS );
-        System.out.println(hours + " V " + minutes + " V " + seconds);
-        return 0;
+        length_seconds+=seconds;
+        average_length_seconds= length_seconds/total_visits;
     }
 }
