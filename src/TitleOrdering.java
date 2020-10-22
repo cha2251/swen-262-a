@@ -3,7 +3,9 @@ import java.util.List;
 
 public class TitleOrdering implements Ordering {
 
-
+    /*
+    Takes in a list of books, sorts it, and returns the sorted list
+     */
     @Override
     public List sort(List<Book> bookList) {
         bookList.sort(new Comparator<Book>() {
