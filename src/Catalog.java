@@ -6,6 +6,7 @@ public class Catalog {
     private List<Book> purchasableList;
     private List<Book> ownedList;
     private Ordering sortOrder;
+    private List sortedList;
 
     public Catalog(){
         purchasableList = new ArrayList<>();
@@ -24,21 +25,18 @@ public class Catalog {
         book.addCopies(amount);
     }
 
-    public List<?> getBooks(List<String> ids){
-        List<Book> passList = new ArrayList<>();
+    public List<?> getBooks(List<String> ids) {
+        List<Book> books = new ArrayList<>();
         List<String> failList = new ArrayList<>();
-        failList.addAll(ids);
-        for (String id : ids) {
-            for (Book book : ownedList) {
-                if (book.getIsbn() == Long.parseLong(id)){
-                    passList.add(book);
-                    failList.remove(id);
-                    break;
-                }
+        for (String bID : ids) {
+            try {
+                books.add((Book) sortedList.get(Integer.parseInt(bID)));
+            } catch (Exception e) {
+                failList.add(bID);
             }
         }
-        if(failList.size() > 0) return failList;
-        return passList;
+        if (failList.size() > 0) return failList;
+        return books;
     }
 
     public void setSortOrder(Ordering newOrdering){
@@ -48,5 +46,9 @@ public class Catalog {
     public List sortCatalog(){
         return sortOrder.sort(ownedList);
     }
-    public List sortPurchasable() {return sortOrder.sort(purchasableList);}
+
+    public List sortPurchasable() {
+        sortedList = sortOrder.sort(purchasableList);
+        return sortedList;
+    }
 }
