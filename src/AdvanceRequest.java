@@ -1,11 +1,17 @@
 public class AdvanceRequest implements Request {
 
+    /*
+    Used for the simulated advancement of time in the library
+     */
+
     private Library library;
 
+    //Instantiates Library in this class
     public AdvanceRequest(Library library) {
         this.library = library;
     }
 
+    //Advances time by the specified amount of time
     @Override
     public String execute(String[] args) {
         String prefix = args[0]+",";
