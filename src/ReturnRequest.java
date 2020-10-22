@@ -1,13 +1,25 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Implments a request for book returns
+ */
 public class ReturnRequest implements Request {
     private Library library;
 
+    /**
+     * Constructor
+     * @param library
+     */
     public ReturnRequest(Library library) {
         this.library = library;
     }
 
+    /**
+     * Breaks up a request string for parsing
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
