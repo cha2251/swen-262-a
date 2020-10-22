@@ -8,7 +8,7 @@ public class RegisterRequest implements Request {
 
     @Override
     public String execute(String[] args) {
-        if(args.length == 5) {
+        if (args.length == 5) {
             String firstName = args[1];
             String lastName = args[2];
             String address = args[3];

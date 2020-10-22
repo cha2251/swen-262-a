@@ -1,1 +1,1 @@
-public enum BookList {OWNED,PURCHASABLE}
+public enum BookList {OWNED, PURCHASABLE}

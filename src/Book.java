@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class Book {
     long isbn;
@@ -26,11 +25,11 @@ public class Book {
     }
 
     public void addCopies(int amount) {
-        copies+=amount;
-        available+=amount;
+        copies += amount;
+        available += amount;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
@@ -40,7 +39,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return isbn +","+ title +","+authorList.toString()+","+publisher+","+publishedDate +","+ pages +"\n";
+        return isbn + "," + title + "," + authorList.toString() + "," + publisher + "," + publishedDate + "," + pages + "\n";
     }
 
     @Override

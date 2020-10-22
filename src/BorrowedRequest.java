@@ -1,4 +1,4 @@
-public class BorrowedRequest implements Request{
+public class BorrowedRequest implements Request {
 
     private Library library;
 
@@ -9,7 +9,7 @@ public class BorrowedRequest implements Request{
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
-        if(args.length == 2) {
+        if (args.length == 2) {
             String visitor = args[1];
             return prefix + library.findBorrowedBooks(visitor);
         }

@@ -8,7 +8,7 @@ public class ArriveRequest implements Request {
 
     @Override
     public String execute(String[] args) {
-        if(args.length == 2) {
+        if (args.length == 2) {
             String id = args[1];
             String result = library.beginVisit(id);
             return result;

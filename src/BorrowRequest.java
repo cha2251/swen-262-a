@@ -11,7 +11,7 @@ public class BorrowRequest implements Request {
     @Override
     public String execute(String[] args) {
         String prefix = args[0] + ",";
-        if(args.length == 3) {
+        if (args.length == 3) {
             String visitor = args[1];
             String ids = args[2];
             String fixed = ids.replace("{", "").replace("}", "");
