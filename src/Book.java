@@ -8,7 +8,6 @@ public class Book {
     /*
     this class is used for the creation and management of books
      */
-
     long isbn;
     String title;
     List<String> authorList;
@@ -60,6 +59,7 @@ public class Book {
         return title;
     }
 
+
     /**
      * Returns a long of the ISBN# of the book
      * @return
@@ -88,5 +88,26 @@ public class Book {
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
         return isbn == book.isbn;
+
+    /*
+    When a Book is checked in, this increases the number of copies avaliable of that book by 1
+     */
+    public void checkIn(){
+        copiesAvailable++;
+    }
+
+    /*
+    When a Book is checked out, this decreases the number of copies avilable of that book by 1
+    */
+    public void checkOut(){
+        copiesAvailable--;
+    }
+
+    /*
+    Returns a String of the name of the author
+     */
+    public String getAuthor(){
+        return author;
+
     }
 }

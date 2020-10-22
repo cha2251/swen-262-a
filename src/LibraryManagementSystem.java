@@ -10,7 +10,7 @@ public class LibraryManagementSystem {
 
     /**
      * The main function of the system, calls for creation and start up of library,
-     * as wellas checking for input
+     * as well as checking for input
      * @param args
      */
     public static void main(String[] args) {

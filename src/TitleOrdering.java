@@ -6,6 +6,7 @@ import java.util.List;
  */
 public class TitleOrdering implements Ordering {
 
+
     /**
      * sorts a list of books by title
      * @param bookList

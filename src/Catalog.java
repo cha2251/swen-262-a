@@ -29,6 +29,7 @@ public class Catalog {
         purchasableList.add(book);
     }
 
+
     /**
      * adds the specified amount of copies of the book to the list of books you own
      * @param book
@@ -107,5 +108,6 @@ public class Catalog {
      */
     public List sortPurchasable() {
         return sortOrder.sort(purchasableList);
+
     }
 }
