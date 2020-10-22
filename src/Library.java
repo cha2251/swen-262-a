@@ -15,6 +15,10 @@ import java.util.*;
 
 public class Library {
 
+    /**
+     * Class for the creation and management of the library
+     */
+
     private static String root;
     private static int currentID = 1;
     private static Library instance = new Library();
@@ -34,10 +38,17 @@ public class Library {
     private Library() {
     }
 
+    /**
+     * Constructor
+     */
     public static Library getInstance() {
         return instance;
     }
 
+    /**
+     * Refreshes all data stored in lines
+     * @param lines
+     */
     void reloadData(List<String> lines) {
         for (String line : lines) {
             String[] args = line.split(",");
@@ -80,6 +91,10 @@ public class Library {
         }
     }
 
+    /**
+     * Parses all books from file
+     * @param file
+     */
     public void loadBooks(File file) {
         BufferedReader reader;
         try {
@@ -96,6 +111,10 @@ public class Library {
         }
     }
 
+    /**
+     * Start up functions for the library
+     * @param root
+     */
     public void startUp(String root) {
         Library.root = root;
         FileUtils utils = new FileUtils(root);
@@ -123,6 +142,9 @@ public class Library {
         }
     }
 
+    /**
+     * Shut down procedure for Library to save its state and turn off
+     */
     public void shutDown() {
         //Save the current state into files and shut down
         System.out.println("Shutting down");
@@ -136,6 +158,12 @@ public class Library {
 
     }
 
+    /**
+     * Modifies the time of the library by the specified amount
+     * @param days
+     * @param hours
+     * @return
+     */
     public LocalDateTime modifyTime(long days, long hours) {
         //Update modified time
         modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
@@ -148,6 +176,10 @@ public class Library {
         return getLibraryTime();
     }
 
+    /**
+     * Parses books from passes from file and adds parsed books to the catalog
+     * @param info
+     */
     void parseBook(String info) {
         boolean inField = false;
 
@@ -193,14 +225,29 @@ public class Library {
 
     }
 
+    /**
+     * checks if library is up, always true
+     * @return
+     */
     public boolean isUp() {
         return true;
     }
 
+    /**
+     * checks if visitor is in part of the visitor list
+     * @param visitor
+     * @return
+     */
     private boolean checkForVisitor(Visitor visitor) {
         return visitorList.contains(visitor);
     }
 
+
+    /**
+     * checks if the visitor is visiting currently
+     * @param visitor
+     * @return
+     */
     private boolean checkActiveVisitors(Visitor visitor) {
         for (Visit visit : activeVisits) {
             if (visit.getVisitor().equals(visitor)) return true;
@@ -208,6 +255,11 @@ public class Library {
         return false;
     }
 
+    /**
+     * Returns whether a visitor is currently visiting the library
+     * @param id
+     * @return
+     */
     private boolean isVisiting(String id) {
         Visitor inQuestion = getVisitor(id);
         if (inQuestion != null) {
@@ -216,6 +268,11 @@ public class Library {
         return false;
     }
 
+    /**
+     * returns whether a visitor has an active visit
+     * @param id
+     * @return
+     */
     private boolean hasActiveVisit(String id) {
         if (getVisitor(id) != null) {
             for (Visit visit : activeVisits) {
@@ -227,6 +284,11 @@ public class Library {
         return false;
     }
 
+    /**
+     * gets info on a visitors current visit
+     * @param id
+     * @return
+     */
     private Visit getVisit(String id) {
         for (Visit visit : activeVisits) {
             if (visit.getVisitor().getId().equals(id)) return visit;
@@ -234,6 +296,11 @@ public class Library {
         return null;
     }
 
+    /**
+     * Gets info on visitor
+     * @param id
+     * @return
+     */
     private Visitor getVisitor(String id) {
         for (Visitor visitor : visitorList) {
             if (visitor.getId().equals(id)) return visitor;
@@ -241,6 +308,14 @@ public class Library {
         return null;
     }
 
+    /**
+     * Registors a new visitor
+     * @param firstName
+     * @param lastName
+     * @param address
+     * @param phoneNumber
+     * @return
+     */
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber) {
         String str = "" + currentID++;
         String id = ("0000000000" + str).substring(str.length());
@@ -259,6 +334,11 @@ public class Library {
         return "register,duplicate;";
     }
 
+    /**
+     * deals with a visitor arriving
+     * @param id
+     * @return
+     */
     public String beginVisit(String id) {
         if (getVisitor(id) == null) {
             return "arrive,invalid-id;";
@@ -275,6 +355,16 @@ public class Library {
         return "arrive," + id + "," + visit.getStartDate() + "," + visit.getStartTime() + ";";
     }
 
+    /**
+     * Searches to see if a book is in the catalog, returns the formatted results
+     * @param title
+     * @param authors
+     * @param isbn
+     * @param publisher
+     * @param sort
+     * @param listType
+     * @return
+     */
     public String search(String title, String authors, String isbn, String publisher, String sort, BookList listType) {
         Search search = new BasicSearch(catalog, listType);
         search = new SearchTitle(search, title);
@@ -294,6 +384,11 @@ public class Library {
         return str.toString();
     }
 
+    /**
+     * Deals with a visitor leaving
+     * @param id
+     * @return
+     */
     public String endVisit(String id) {
         if (getVisitor(id) == null) {
             return "invalid-id;";
@@ -310,6 +405,12 @@ public class Library {
         return id + "," + currentTime.format(hours) + "," + visit.getElapsedTime(currentTime) + ";";
     }
 
+    /**
+     * Allows a visitor to borrow a book, removing that book from availability
+     * @param id
+     * @param bookID
+     * @return
+     */
     public String borrowBook(String id, ArrayList<String> bookID) {
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<?> tempList = catalog.checkBooks(bookID);
@@ -326,6 +427,12 @@ public class Library {
         return visitor.borrowBook((List<Book>) tempList, time);
     }
 
+    /**
+     * Allows a book to be bought for an amount of money, removes the book from availability
+     * @param bookID
+     * @param amount
+     * @return
+     */
     public String buyBook(ArrayList<String> bookID, int amount) {
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
@@ -370,6 +477,12 @@ public class Library {
         return str;
     }
 
+    /**
+     * Uses the visitors id and bookID to return a book back to the library
+     * @param id
+     * @param bookID
+     * @return
+     */
     public String returnBook(String id, ArrayList<String> bookID) {
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<Book> returning = new ArrayList<>();
@@ -399,6 +512,12 @@ public class Library {
         return "success;";
     }
 
+    /**
+     * Pays the fine owed by a vistor
+     * @param id
+     * @param amount
+     * @return
+     */
     public String payFine(String id, String amount) {
         if (!isVisiting(id)) return "invalid-visitor-id;";
         Visitor visitor = getVisitor(id);
@@ -411,6 +530,11 @@ public class Library {
         return "success," + format.format(balance) + ";";
     }
 
+    /**
+     * Generates the report for the past number of days
+     * @param days
+     * @return
+     */
     public String generateReport(int days) {
         String n = ",\n";
         int books = 0;
@@ -473,6 +597,10 @@ public class Library {
                 "Fines Outstanding: " + format.format(outstanding);
     }
 
+    /**
+     * returns a list of formatted library events
+     * @return
+     */
     public List<LibraryEvent> readEvents() {
         List<LibraryEvent> events = new ArrayList<>();
         List<String> raw = utils.readFromFile(new File(root + "/data/library.lbms"));
@@ -483,6 +611,11 @@ public class Library {
         return events;
     }
 
+    /**
+     * Adds a visitors time spent in library to the calculation for the average length
+     * @param start
+     * @param end
+     */
     private void addToAverage(LocalDateTime start, LocalDateTime end) {
         long seconds = start.until(end, ChronoUnit.SECONDS);
         length_seconds += seconds;

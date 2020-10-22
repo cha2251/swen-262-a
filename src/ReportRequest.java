@@ -1,11 +1,24 @@
 public class ReportRequest implements Request {
 
+    /*
+    Used for the string formatting of a library report
+     */
+
     private Library library;
 
+    /**
+     * Instantiates Library in this class
+     * @param library
+     */
     public ReportRequest(Library library) {
         this.library = library;
     }
 
+    /**
+     * Returns a formatted string for a library report
+     * @param args
+     * @return
+     */
     @Override
     public String execute(String[] args) {
         int days = -1;
