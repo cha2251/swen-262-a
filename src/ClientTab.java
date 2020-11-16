@@ -21,6 +21,7 @@ public class ClientTab {
 
         HBox inputBar = new HBox();
         Button enterButton = new Button("Enter");
+        enterButton.setPrefWidth(100);
         TextField input = new TextField();
         input.setPrefColumnCount(60);
         enterButton.setOnAction( e -> runCommand(input, output));

@@ -34,6 +34,8 @@ public class Library {
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
     private List<Book> queriedBooks = new ArrayList<>();
+    private List<Account> libraryAccounts = new ArrayList<>();
+    private List<String> unregisteredClients = new ArrayList<>();
 
 
     private Library() {
@@ -627,7 +629,45 @@ public class Library {
     public String connect(){
         String str = "" + currentConnectionID++;
         String id = ("0000000000" + str).substring(str.length());
-        //TODO Add id to Visitor/Account?
+        unregisteredClients.add(id);
         return id;
+    }
+
+    public String disconnect(String id){
+        switch (checkClientID(id)) {
+            case 0:
+                return "invalid-client-id;";
+            case 1:
+            case 2:
+                for (Account account : libraryAccounts){
+                    if(account.clientID.equals(id)){account.setClientID("");}
+                }
+                break;
+            case 3:
+                for (String testID : unregisteredClients){
+                    if(testID.equals(id)){unregisteredClients.remove(testID);}
+                    break;
+                }
+        }
+        return id+",disconnect;";
+    }
+
+    /**
+     * Checks if a client ID is logged into the system.
+     * @param id the ID to be checked for
+     *
+     * @return 0 if the id is not found
+     * @return 1 if the id is associated with a Visitor
+     * @return 2 if the id is associated with a Employee
+     * @return 3 if the id is not associated with an account
+     */
+    private int checkClientID(String id){
+        for (Account account : libraryAccounts){
+            if (account.clientID.equals(id)){return account.type== Account.AccountType.VISITOR ? 1 : 2;}
+        }
+        for (String testID : unregisteredClients){
+            if(testID.equals(id)){return 3;}
+        }
+        return 0;
     }
 }
