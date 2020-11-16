@@ -56,7 +56,7 @@ public class ClientTab {
         if (args[0].equals("connect")) {
             clientID = args[1]+",";
         }else if(args.length > 1 && args[1].equals("create")){
-            tab.setText(commandArgs[2]);
+            tab.setText(commandArgs[1]);
         }
 
     }
@@ -83,6 +83,6 @@ public class ClientTab {
                 return "Not a valid request";
             }
         }
-        return "Cannot Parse";
+        return input;
     }
 }
