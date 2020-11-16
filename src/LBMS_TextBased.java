@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class LibraryManagementSystem {
+public class LBMS_TextBased implements ClientType {
 
     /**
      * This class is the main class handling the creation and maintaince of library
@@ -8,12 +8,7 @@ public class LibraryManagementSystem {
     static String root;
     static RequestParser parser = new RequestParser();
 
-    /**
-     * The main function of the system, calls for creation and start up of library,
-     * as well as checking for input
-     * @param args
-     */
-    public static void main(String[] args) {
+    public void runLibrary(){
         root = System.getProperty("user.dir");
         Library library = Library.getInstance();
         library.startUp(root);

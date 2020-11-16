@@ -124,7 +124,7 @@ public class Library {
         Library.root = root;
         FileUtils utils = new FileUtils(root);
         this.utils = utils;
-        this.api = new APIBooks(utils);
+        api = new APIBooks(utils);
         loadBooks(new File(root + "/data/books.txt"));
         File info = new File(root + "/data/config.properties");
         if (info.exists()) {

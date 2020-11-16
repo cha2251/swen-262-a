@@ -5,7 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 
-public class LBMS_GUI extends  Application{
+public class LBMS_GUI extends  Application implements ClientType{
     private Stage mainStage;
 
     @Override
@@ -38,18 +38,13 @@ public class LBMS_GUI extends  Application{
 
     static String root;
 
-
-    /**
-     * The main function of the system, calls for creation and start up of library,
-     * as well as checking for input
-     * @param args
-     */
-    public static void main(String[] args) {
+    public void runLibrary(){
         root = System.getProperty("user.dir");
         Library library = Library.getInstance();
         library.startUp(root);
         Application.launch();
     }
+
 
     private Tab createNewPage(){
         ClientTab tab = new ClientTab();
