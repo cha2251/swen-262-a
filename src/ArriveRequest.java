@@ -24,6 +24,7 @@ public class ArriveRequest implements Request {
         if (args.length == 2) {
             String id = args[1];
             String result = library.beginVisit(id);
+            UndoRedo.addCommand(new Command("Arrive", args));
             return result;
         }
         return "arrive,missing-parameters,{id};";

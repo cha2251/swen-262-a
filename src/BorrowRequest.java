@@ -31,7 +31,11 @@ public class BorrowRequest implements Request {
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            return prefix + library.borrowBook(visitor, books);
+            String str = prefix + library.borrowBook(visitor, books);
+            ArrayList<String> dates = library.borrowedDates(visitor, ids);
+            args.add(dates);
+            UndoRedo.addCommand(new Command("Borrow", args));
+            return str;
         }
         return prefix + "visitor ID,{id};";
     }
@@ -43,13 +47,13 @@ public class BorrowRequest implements Request {
      */
     public String undo(String[] args) {
         String prefix = args[0] + ",";
-        if (args.length == 3) {
+        if (args.length == 4) {
             String visitor = args[1];
             String ids = args[2];
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            return library.undoBorrowBook(visitor, books);
+            return library.undoBorrowBook(visitor, books, dates);
         }
         return "Undid Borrow Book";
     }

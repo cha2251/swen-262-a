@@ -27,6 +27,7 @@ public class AdvanceRequest implements Request {
         if (0 > days || days > 7) {
             return prefix + "invalid-number-of-days," + days + ";";
         }
+        UndoRedo.addCommand(new Command("Advance", args));
         //If hours is defined
         if (args.length == 3) {
             //If hours are between the range

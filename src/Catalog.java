@@ -40,6 +40,9 @@ public class Catalog {
             ownedList.add(book);
         }
         book.addCopies(amount);
+        if (book.copies == 0){
+            ownedList.remove(book);
+        }
     }
 
     /**

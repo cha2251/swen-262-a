@@ -26,6 +26,9 @@ public class ReturnRequest implements Request {
         if (args.length >= 3) {
             String visitor = args[1];
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
+            ArrayList<String> dates = library.borrowedDates(visitor, ids);
+            args.add(dates);
+            UndoRedo.addCommand(new Command("Return", args));
             return prefix + library.returnBook(visitor, ids);
         }
         return prefix + "visitor ID,id,[ids];";
@@ -36,7 +39,8 @@ public class ReturnRequest implements Request {
         if (args.length >= 3) {
             String visitor = args[1];
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
-            return library.undoReturnBook(visitor, ids);
+            ArrayList<String> dates = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 3, args.length)));
+            return library.undoReturnBook(visitor, ids, dates);
         }
         return "Undid Return Request";
     }

@@ -462,7 +462,7 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String undoBorrowBook(String id, ArrayList<String> bookID) {
+    public String undoBorrowBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
         queriedBooks.clear();
@@ -479,9 +479,9 @@ public class Library {
             }
         }
         if (failList.size() > 0) return "Undid Book Borrow";
-        LocalDateTime time = getLibraryTime();
 
 
+        visitor.returnBookForUndo(returning, dates);
 
         return "Undid Book Borrow";
     }
@@ -514,7 +514,13 @@ public class Library {
         return str.toString();
     }
 
-    public String UndoBuyBook(ArrayList<String> bookID, int amount){
+    /**
+     * Undoes a Buy Book request
+     * @param bookID
+     * @param amount
+     * @return
+     */
+    public String undoBuyBook(ArrayList<String> bookID, int amount){
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
@@ -589,14 +595,8 @@ public class Library {
         return "success;";
     }
 
-    /**
-     * Undo a Return Book Request
-     * @param id
-     * @param bookID
-     * @return
-     */
-    public String undoReturnBook(String id, ArrayList<String> bookID) {
-        if (!isVisiting(id)) return "invalid-visitor-id;";
+    public ArrayList<String> borrowedDates(String id, ArrayList<String> bookID){
+        if (!isVisiting(id)) return null;
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
         queriedBooks.clear();
@@ -612,16 +612,22 @@ public class Library {
                 failList.add(bID);
             }
         }
-        if (failList.size() > 0) return "invalid-book-id," + failList + ";";
-        LocalDateTime time = getLibraryTime();
+        if (failList.size() > 0) return null;
+        return visitor.checkOutDates(returning);
+    }
 
-        for (Book b : returning) {
-            utils.addEntry(StoredType.RETURN_BOOK, new String[]{id, String.valueOf(b.getIsbn()), time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
-        }
+    /**
+     * Undo a Return Book Request
+     * @param id
+     * @param bookID
+     * @return
+     */
+    public String undoReturnBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
+        List<?> tempList = catalog.checkBooks(bookID);
+        Visitor visitor = getVisitor(id);
+        visitor.borrowBookForUndo((List<Book>) tempList, dates);
 
-        double fine = visitor.returnBook(returning, time);
-        if (fine > 0) return "overdue," + format.format(fine) + ";";
-        return "success;";
+        return "Undid Return Request";
     }
 
     /**

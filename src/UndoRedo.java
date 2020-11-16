@@ -3,12 +3,12 @@ import java.util.List;
 
 public class UndoRedo {
 
-    private List<Command> undoList;
-    private List<Command> redoList;
+    public static UndoRedo instance = new UndoRedo();
+    private List<Command> undoList = new ArrayList<>();
+    private List<Command> redoList = new ArrayList<>();
 
-    public UndoRedo(){
-        undoList = new ArrayList<>();
-        redoList = new ArrayList<>();
+    public static UndoRedo getInstance(){
+        return instance;
     }
 
 
@@ -19,7 +19,7 @@ public class UndoRedo {
     public void undoCommand(){
         if (undoList.size() > 0){
             //actually running command
-            //Add: Advance, borrow, buy, Depart, Pay,
+            //Add: Advance, borrow, buy, Depart, Pay, Return
 
             redoList.add(0, undoList.remove(0));
         }
