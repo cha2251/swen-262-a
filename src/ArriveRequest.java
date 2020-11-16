@@ -28,4 +28,15 @@ public class ArriveRequest implements Request {
         }
         return "arrive,missing-parameters,{id};";
     }
+
+    /**
+     * Undo Arrive Request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
+        String id = args[1];
+        library.removeVisitor(id);
+        return "Undid Arrive Request";
+    }
 }

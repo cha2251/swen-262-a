@@ -356,6 +356,18 @@ public class Library {
         return "arrive," + id + "," + visit.getStartDate() + "," + visit.getStartTime() + ";";
     }
 
+
+    /**
+     * Remove a visitor without having the system track that they were there
+     * @param id
+     * @return
+     */
+    public void removeVisitor(String id){
+        Visitor visitor = getVisitor(id);
+        Visit visit = getVisit(id);
+        activeVisits.remove(visit);
+    }
+
     /**
      * Searches to see if a book is in the catalog, returns the formatted results
      * @param title
@@ -407,6 +419,22 @@ public class Library {
     }
 
     /**
+     * Undo a depart request
+     * @param id
+     */
+    public void replaceVisitor(String id) {
+        if (getVisitor(id) == null) {
+            return ;
+        }
+        if (!hasActiveVisit(id)) {
+            return ;
+        }
+        Visit visit = getVisit(id);
+        activeVisits.add(visit);
+
+    }
+
+    /**
      * Allows a visitor to borrow a book, removing that book from availability
      * @param id
      * @param bookID
@@ -427,6 +455,37 @@ public class Library {
         }
         return visitor.borrowBook((List<Book>) tempList, time);
     }
+
+    /**
+     * Undo a borrow book request
+     * @param id
+     * @param bookID
+     * @return
+     */
+    public String undoBorrowBook(String id, ArrayList<String> bookID) {
+        List<Book> returning = new ArrayList<>();
+        Visitor visitor = getVisitor(id);
+        queriedBooks.clear();
+        for (BorrowedBook b : visitor.findBorrowedBooks()) {
+            queriedBooks.add(b.getBook());
+        }
+        //Query all of the users borrowed books
+        List<String> failList = new ArrayList<>();
+        for (String bID : bookID) {
+            try {
+                returning.add(queriedBooks.get(Integer.parseInt(bID)));
+            } catch (Exception e) {
+                failList.add(bID);
+            }
+        }
+        if (failList.size() > 0) return "Undid Book Borrow";
+        LocalDateTime time = getLibraryTime();
+
+
+
+        return "Undid Book Borrow";
+    }
+
 
     /**
      * Allows a book to be bought for an amount of money, removes the book from availability
@@ -453,6 +512,23 @@ public class Library {
             str.append(b.toString()).deleteCharAt(str.length() - 1).append(",").append(amount).append("\n");
         }
         return str.toString();
+    }
+
+    public String UndoBuyBook(ArrayList<String> bookID, int amount){
+        List<String> failList = new ArrayList<>();
+        List<Book> toAdd = new ArrayList<>();
+        for (String book : bookID) {
+            try {
+                toAdd.add(queriedBooks.get(Integer.parseInt(book)));
+            } catch (Exception e) {
+                failList.add(book);
+            }
+        }
+        if (failList.size() > 0) return "Undid Buy Book";
+        for (Book b : toAdd) {
+            catalog.buyBook(b, amount * -1);
+        }
+        return "Undid Buy Book";
     }
 
     public void markRequest(Request request) {
@@ -514,6 +590,41 @@ public class Library {
     }
 
     /**
+     * Undo a Return Book Request
+     * @param id
+     * @param bookID
+     * @return
+     */
+    public String undoReturnBook(String id, ArrayList<String> bookID) {
+        if (!isVisiting(id)) return "invalid-visitor-id;";
+        List<Book> returning = new ArrayList<>();
+        Visitor visitor = getVisitor(id);
+        queriedBooks.clear();
+        for (BorrowedBook b : visitor.findBorrowedBooks()) {
+            queriedBooks.add(b.getBook());
+        }
+        //Query all of the users borrowed books
+        List<String> failList = new ArrayList<>();
+        for (String bID : bookID) {
+            try {
+                returning.add(queriedBooks.get(Integer.parseInt(bID)));
+            } catch (Exception e) {
+                failList.add(bID);
+            }
+        }
+        if (failList.size() > 0) return "invalid-book-id," + failList + ";";
+        LocalDateTime time = getLibraryTime();
+
+        for (Book b : returning) {
+            utils.addEntry(StoredType.RETURN_BOOK, new String[]{id, String.valueOf(b.getIsbn()), time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
+        }
+
+        double fine = visitor.returnBook(returning, time);
+        if (fine > 0) return "overdue," + format.format(fine) + ";";
+        return "success;";
+    }
+
+    /**
      * Pays the fine owed by a vistor
      * @param id
      * @param amount
@@ -529,6 +640,20 @@ public class Library {
         utils.addEntry(StoredType.PAYMENT, new String[]{id, amount});
         balance = visitor.payFine(amt);
         return "success," + format.format(balance) + ";";
+    }
+
+    /**
+     * Undo payment of a fine
+     * @param id
+     * @param amount
+     * @return
+     */
+    public String undoPayFine(String id, String amount) {
+        if (!isVisiting(id)) return "Undid Pay Fine Request";
+        Visitor visitor = getVisitor(id);
+        double amt = Double.parseDouble(amount);
+        visitor.payFine(amt * -1);
+        return "Undid Pay Fine Request";
     }
 
     /**

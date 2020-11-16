@@ -30,4 +30,14 @@ public class ReturnRequest implements Request {
         }
         return prefix + "visitor ID,id,[ids];";
     }
+
+    public String undo(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length >= 3) {
+            String visitor = args[1];
+            ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
+            return library.undoReturnBook(visitor, ids);
+        }
+        return "Undid Return Request";
+    }
 }

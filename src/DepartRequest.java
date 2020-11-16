@@ -29,4 +29,20 @@ public class DepartRequest implements Request {
         }
         return prefix + "missing-parameters,{id};";
     }
+
+    /**
+     * Undo a Depart request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length == 2) {
+            String id = args[1];
+            library.replaceVisitor(id);
+            return "Undid Depart Request";
+        }
+        return "Undid Depart Request";
+    }
+
 }

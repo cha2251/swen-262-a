@@ -35,4 +35,22 @@ public class BorrowRequest implements Request {
         }
         return prefix + "visitor ID,{id};";
     }
+
+    /**
+     * Undo Borrow Request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length == 3) {
+            String visitor = args[1];
+            String ids = args[2];
+            String fixed = ids.replace("{", "").replace("}", "");
+            String[] tentativeList = fixed.split(",");
+            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
+            return library.undoBorrowBook(visitor, books);
+        }
+        return "Undid Borrow Book";
+    }
 }

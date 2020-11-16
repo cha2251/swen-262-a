@@ -35,4 +35,22 @@ public class BuyRequest implements Request {
         }
         return prefix + "quantity,id[ids];";
     }
+
+    /**
+     * Undo Buy Request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length >= 3) {
+            String amount = args[1];
+            String ids = args[2];
+            String fixed = ids.replace("{", "").replace("}", "");
+            String[] tentativeList = fixed.split(",");
+            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
+            return prefix + library.undoBuyBook(books, Integer.parseInt(amount));
+        }
+        return "Undid Buy Book";
+    }
 }

@@ -19,6 +19,7 @@ public class UndoRedo {
     public void undoCommand(){
         if (undoList.size() > 0){
             //actually running command
+            //Add: Advance, borrow, buy, Depart, Pay,
 
             redoList.add(0, undoList.remove(0));
         }

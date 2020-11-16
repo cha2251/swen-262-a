@@ -29,4 +29,19 @@ public class PayRequest implements Request {
         }
         return prefix + "visitor ID,amount;";
     }
+
+    /**
+     * Undo a Pay Request
+     * @param args
+     * @return
+     */
+    public String execute(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length == 3) {
+            String visitor = args[1];
+            String amount = args[2];
+            return library.undoPayFine(visitor, amount);
+        }
+        return "Undid Pay Fine Request";
+    }
 }
