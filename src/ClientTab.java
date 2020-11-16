@@ -64,8 +64,14 @@ public class ClientTab {
     public static String handle(String input) {
         String[] response = parser.parseRequest(input);
         if (response != null) {
-            //First argument is the request type
-            String type = response[0].toLowerCase();
+            //First argument is the client id
+            String clientID = response[0].toLowerCase();
+            if (clientID.equals("connect")){ //Case to handle connect without id
+                Request request = new ConnectRequest(Library.getInstance());
+                return request.execute(response);
+            }
+            //Second argument is the request type
+            String type = response[1].toLowerCase();
             //Get the request type with an capitalized first letter
             type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
 
