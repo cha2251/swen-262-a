@@ -36,7 +36,7 @@ public class Library {
     private List<Book> queriedBooks = new ArrayList<>();
     private List<Account> libraryAccounts = new ArrayList<>();
     private List<String> unregisteredClients = new ArrayList<>();
-    private APIBooks api = new APIBooks();
+    private APIBooks api;
 
 
     private Library() {
@@ -124,6 +124,7 @@ public class Library {
         Library.root = root;
         FileUtils utils = new FileUtils(root);
         this.utils = utils;
+        this.api = new APIBooks(utils);
         loadBooks(new File(root + "/data/books.txt"));
         File info = new File(root + "/data/config.properties");
         if (info.exists()) {
@@ -220,6 +221,9 @@ public class Library {
         }
         args.add(current.toString());
 
+        if(args.get(0).isEmpty()) {
+            return;
+        }
         long isbn = Long.parseLong(args.get(0));
         String title = args.get(1).replace("\"", "");
         String authorsString = args.get(2).replace("{", "").replace("}", "");

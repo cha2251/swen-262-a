@@ -2,8 +2,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import utils.FileUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,6 +15,10 @@ public class APIBooks {
     BufferedReader reader;
     StringBuffer responseContent;
     HttpURLConnection connection;
+    FileUtils utils;
+    public APIBooks(FileUtils utils) {
+        this.utils = utils;
+    }
     public Book getBook(String isbn) {
         try {
             responseContent = new StringBuffer();
@@ -56,6 +62,10 @@ public class APIBooks {
                 JsonElement isbn = isbn_13.get("identifier");
                 Book googleBook = new Book(isbn.getAsLong(), title.getAsString(), authors.getAsString(),
                         "From Google API (NO PUB)", date.getAsString(), pages.getAsInt());
+                String entry = isbn.getAsLong() + "," + title.toString() + "," +
+                        authors.toString().replace("[","{").replace("]","}") +
+                        ",\"NO PUB\"," + date.getAsString()+ "," +pages.getAsInt();
+                utils.writeToFile(new File(utils.root + "/data/books.txt"),entry, true);
                 return googleBook;
             }
         }

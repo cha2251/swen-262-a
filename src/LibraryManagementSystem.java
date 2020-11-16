@@ -37,17 +37,18 @@ public class LibraryManagementSystem {
                 Request request = new ConnectRequest(Library.getInstance());
                 System.out.println(request.execute(response));
             }else {
-                //Second argument is the request type
-                String type = response[1].toLowerCase();
-                //Get the request type with an capitalized first letter
-                type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
 
                 try {
+                    //Second argument is the request type
+                    String type = response[1].toLowerCase();
+                    //Get the request type with an capitalized first letter
+                    type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
                     Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());
                     System.out.println(request.execute(response));
+                } catch (ClassNotFoundException ex) {
+                    System.out.println("Try adding your client ID before requests!");
                 } catch (Exception e) {
                     System.out.println("Not a valid request");
-                    e.printStackTrace();
                 }
             }
         }
