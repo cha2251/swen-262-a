@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Command {
 
     private String command;
-    private List<String> args;
+    private String[] args;
 
 
     /**
@@ -15,7 +15,7 @@ public class Command {
      * @param command
      * @param args
      */
-    public Command(String command, List<String> args){
+    public Command(String command, String[] args){
         this.args = args;
         this.command = command;
     }
@@ -26,7 +26,7 @@ public class Command {
      */
     @Override
     public String toString() {
-        return command + "(" + authorList.toString() + ")\n";
+        return command + "(" + args.toString() + ")\n";
     }
 
 }
