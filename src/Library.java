@@ -323,10 +323,7 @@ public class Library {
      * @return
      */
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber, String clientID) {
-        System.out.println(clientID);
-        System.out.println(unregisteredClients.get(0));
-        System.out.println(checkClientID(clientID)==0);
-        if (checkClientID(clientID)==0){return "register,invalid-id;";}
+        if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
         String str = "" + currentID++;
         String id = ("0000000000" + str).substring(str.length());
 
@@ -350,7 +347,7 @@ public class Library {
      * @return
      */
     public String beginVisit(String id, String clientID) {
-        if (checkClientID(clientID)==0){return "arrive,invalid-id;";}
+        if (checkClientID(clientID)==0){return "arrive,invalid-client-id;";}
         if (getVisitor(id) == null) {
             return "arrive,invalid-id;";
         }
@@ -377,7 +374,7 @@ public class Library {
      * @return
      */
     public String search(String title, String authors, String isbn, String publisher, String sort, BookList listType, String clientID) {
-        if (checkClientID(clientID)==0){return "search,invalid-id;";}
+        if (checkClientID(clientID)==0){return "search,invalid-client-id;";}
         Search search = new BasicSearch(catalog, listType);
         search = new SearchTitle(search, title);
         search = new SearchAuthor(search, authors);
@@ -402,7 +399,7 @@ public class Library {
      * @return
      */
     public String endVisit(String id, String clientID) {
-        if (checkClientID(clientID)==0){return "depart,invalid-id;";}
+        if (checkClientID(clientID)==0){return "depart,invalid-client-id;";}
         if (getVisitor(id) == null) {
             return "invalid-id;";
         }
@@ -425,7 +422,7 @@ public class Library {
      * @return
      */
     public String borrowBook(String id, ArrayList<String> bookID, String clientID) {
-        if (checkClientID(clientID)==0){return "register,invalid-id;";}
+        if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<?> tempList = catalog.checkBooks(bookID);
         if (tempList.get(0) instanceof String) return "invalid-book-id,{" + tempList + "};";
@@ -448,7 +445,7 @@ public class Library {
      * @return
      */
     public String buyBook(ArrayList<String> bookID, int amount, String clientID) {
-        if (checkClientID(clientID)==0){return "buy,invalid-id;";}
+        if (checkClientID(clientID)==0){return "buy,invalid-client-id;";}
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
@@ -481,7 +478,7 @@ public class Library {
      * @return
      */
     public String findBorrowedBooks(String id, String clientID){
-        if (checkClientID(clientID)==0){return "borrowed,invalid-id;";}
+        if (checkClientID(clientID)==0){return "borrowed,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-vsitor-id;";
         queriedBooks.clear();
         Visitor visitor = getVisitor(id);
@@ -502,7 +499,7 @@ public class Library {
      * @return
      */
     public String returnBook(String id, ArrayList<String> bookID, String clientID) {
-        if (checkClientID(clientID)==0){return "return,invalid-id;";}
+        if (checkClientID(clientID)==0){return "return,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
@@ -538,7 +535,7 @@ public class Library {
      * @return
      */
     public String payFine(String id, String amount, String clientID) {
-        if (checkClientID(clientID)==0){return "pay,invalid-id;";}
+        if (checkClientID(clientID)==0){return "pay,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         Visitor visitor = getVisitor(id);
         double balance = visitor.getFinesOwed();
@@ -556,7 +553,7 @@ public class Library {
      * @return
      */
     public String generateReport(int days, String clientID) {
-        if (checkClientID(clientID)==0){return "pay,invalid-id;";}
+        if (checkClientID(clientID)==0){return "pay,invalid-client-id;";}
         String n = ",\n";
         int books = 0;
         int total_visitors = 0;
