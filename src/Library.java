@@ -640,7 +640,7 @@ public class Library {
             case 1:
             case 2:
                 for (Account account : libraryAccounts){
-                    if(account.clientID.equals(id)){account.setClientID("");}
+                    if(account.getClientID().equals(id)){account.setClientID("");}
                 }
                 break;
             case 3:
@@ -650,6 +650,24 @@ public class Library {
                 }
         }
         return id+",disconnect;";
+    }
+
+    public String createAccount(String clientID, String username, String pwd, String role, String visID){
+        for (Account account : libraryAccounts){
+            if (account.getUsername().equals(username)){return clientID+",create,duplicate-username;";}
+            if (account.getVisitorAccount().getId().equals(visID)){return clientID+",create,duplicate-visitor;";}
+        }
+        Visitor visitor = null;
+        for(Visitor v : visitorList){
+            if (v.getId().equals(visID)){
+                visitor = v;
+                break;
+                }
+        }
+        if (visitor == null){return clientID+",create,invalid-visitor;";}
+        libraryAccounts.add(new Account(username,pwd,role,visitor,clientID));
+        unregisteredClients.remove(clientID);
+        return clientID+",create,success;";
     }
 
     /**
@@ -663,7 +681,7 @@ public class Library {
      */
     private int checkClientID(String id){
         for (Account account : libraryAccounts){
-            if (account.clientID.equals(id)){return account.type== Account.AccountType.VISITOR ? 1 : 2;}
+            if (account.getClientID().equals(id)){return account.getType()== Account.AccountType.VISITOR ? 1 : 2;}
         }
         for (String testID : unregisteredClients){
             if(testID.equals(id)){return 3;}

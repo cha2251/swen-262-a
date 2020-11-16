@@ -1,19 +1,19 @@
 public class Account {
-    String username;
-    String password;
-    AccountType type;
-    Visitor visitorAccount;
-    String clientID;
+    private String username;
+    private String password;
+    private AccountType type;
+    private Visitor visitorAccount;
+    private String clientID;
 
     enum AccountType{
         EMPLOYEE,
         VISITOR
     }
 
-    public Account(String username, String password, AccountType type, Visitor visitorAccount, String clientID) {
+    public Account(String username, String password, String type, Visitor visitorAccount, String clientID) {
         this.username = username;
         this.password = password;
-        this.type = type;
+        this.type = AccountType.valueOf(type);
         this.visitorAccount = visitorAccount;
         this.clientID = clientID;
     }

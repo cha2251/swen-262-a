@@ -45,16 +45,20 @@ public class ClientTab {
         String current = output.getText();
         current += ""+command+"\n";
         String response = handle(clientID+command);
-        guiUpdate(response);
+        guiUpdate(command, response);
         current += ""+response+"\n";
         output.setText(current);
     }
 
-    private void guiUpdate(String response){
+    private void guiUpdate(String command, String response){
         String[] args = response.split(",");
+        String[] commandArgs = response.split(",");
         if (args[0].equals("connect")) {
             clientID = args[1].substring(0,args[1].length()-1)+",";
+        }else if(args[1].equals("create")){
+            tab.setText(commandArgs[2]);
         }
+
     }
 
     public static String handle(String input) {
