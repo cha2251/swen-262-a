@@ -22,10 +22,11 @@ public class ReportRequest implements Request {
     @Override
     public String execute(String[] args) {
         int days = -1;
-        String prefix = args[0] + ",";
-        if (args.length == 2) {
-            days = Integer.parseInt(args[1]);
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 3) {
+            days = Integer.parseInt(args[2]);
         }
-        return prefix + library.generateReport(days);
+        return prefix + library.generateReport(days, clientID);
     }
 }

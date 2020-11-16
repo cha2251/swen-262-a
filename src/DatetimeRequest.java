@@ -24,7 +24,8 @@ public class DatetimeRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
+        String clientID = args[0];
+        String prefix = args[1] + ",";
         LocalDateTime time = library.getLibraryTime();
         DateTimeFormatter myAwesomeCustomFormatForDateTimeYAYYYYY = DateTimeFormatter.ofPattern("yyyy/MM/dd,HH:mm:ss");
         return prefix + time.format(myAwesomeCustomFormatForDateTimeYAYYYYY);

@@ -21,10 +21,11 @@ public class BorrowedRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length == 2) {
-            String visitor = args[1];
-            return prefix + library.findBorrowedBooks(visitor);
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 3) {
+            String visitor = args[2];
+            return prefix + library.findBorrowedBooks(visitor,clientID);
         }
         return prefix + "visitor ID";
     }

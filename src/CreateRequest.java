@@ -31,6 +31,6 @@ public class CreateRequest implements Request {
             String result = library.createAccount(clientID, username, pwd, role,visID);
             return result;
         }
-        return "register,missing-parameters,{first name,last name,address, phone-number};";
+        return "client ID,create,username,password,role,visitor ID;";
     }
 }

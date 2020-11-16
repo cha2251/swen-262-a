@@ -52,10 +52,10 @@ public class ClientTab {
 
     private void guiUpdate(String command, String response){
         String[] args = response.split(",");
-        String[] commandArgs = response.split(",");
+        String[] commandArgs = command.split(",");
         if (args[0].equals("connect")) {
-            clientID = args[1].substring(0,args[1].length()-1)+",";
-        }else if(args[1].equals("create")){
+            clientID = args[1]+",";
+        }else if(args.length > 1 && args[1].equals("create")){
             tab.setText(commandArgs[2]);
         }
 
