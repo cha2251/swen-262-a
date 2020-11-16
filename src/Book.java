@@ -88,26 +88,26 @@ public class Book {
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
         return isbn == book.isbn;
-
+    }
     /*
     When a Book is checked in, this increases the number of copies avaliable of that book by 1
      */
     public void checkIn(){
-        copiesAvailable++;
+        available++;
     }
 
     /*
     When a Book is checked out, this decreases the number of copies avilable of that book by 1
     */
     public void checkOut(){
-        copiesAvailable--;
+        available--;
     }
 
     /*
     Returns a String of the name of the author
      */
-    public String getAuthor(){
-        return author;
+    public List<String> getAuthors(){
+        return authorList;
 
     }
 }
