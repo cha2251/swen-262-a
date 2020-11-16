@@ -31,18 +31,24 @@ public class LibraryManagementSystem {
      */
     public static void handle(String input) {
         String[] response = parser.parseRequest(input);
-        if (response != null) {
-            //First argument is the request type
-            String type = response[0].toLowerCase();
-            //Get the request type with an capitalized first letter
-            type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
-
-            try {
-                Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());
+        if (response != null) {//First argument is the client id
+            String clientID = response[0].toLowerCase();
+            if (clientID.equals("connect")){ //Case to handle connect without id
+                Request request = new ConnectRequest(Library.getInstance());
                 System.out.println(request.execute(response));
-            } catch (Exception e) {
-                System.out.println("Not a valid request");
-                e.printStackTrace();
+            }else {
+                //Second argument is the request type
+                String type = response[1].toLowerCase();
+                //Get the request type with an capitalized first letter
+                type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
+
+                try {
+                    Request request = (Request) Class.forName(type + "Request").getConstructor(Library.class).newInstance(Library.getInstance());
+                    System.out.println(request.execute(response));
+                } catch (Exception e) {
+                    System.out.println("Not a valid request");
+                    e.printStackTrace();
+                }
             }
         }
     }

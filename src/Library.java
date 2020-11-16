@@ -21,6 +21,7 @@ public class Library {
 
     private static String root;
     private static int currentID = 1;
+    private static int currentConnectionID = 1;
     private static Library instance = new Library();
     int total_visits = 0;
     long length_seconds = 0;
@@ -33,6 +34,8 @@ public class Library {
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
     private List<Book> queriedBooks = new ArrayList<>();
+    private List<Account> libraryAccounts = new ArrayList<>();
+    private List<String> unregisteredClients = new ArrayList<>();
     private APIBooks api = new APIBooks();
 
 
@@ -436,7 +439,6 @@ public class Library {
      * @return
      */
     public String buyBook(ArrayList<String> bookID, int amount) {
-        System.out.println(bookID);
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
@@ -625,5 +627,68 @@ public class Library {
         long seconds = start.until(end, ChronoUnit.SECONDS);
         length_seconds += seconds;
         average_length_seconds = length_seconds / total_visits;
+    }
+
+    public String connect(){
+        String str = "" + currentConnectionID++;
+        String id = ("0000000000" + str).substring(str.length());
+        unregisteredClients.add(id);
+        return id;
+    }
+
+    public String disconnect(String id){
+        switch (checkClientID(id)) {
+            case 0:
+                return "invalid-client-id;";
+            case 1:
+            case 2:
+                for (Account account : libraryAccounts){
+                    if(account.getClientID().equals(id)){account.setClientID("");}
+                }
+                break;
+            case 3:
+                for (String testID : unregisteredClients){
+                    if(testID.equals(id)){unregisteredClients.remove(testID);}
+                    break;
+                }
+        }
+        return id+",disconnect;";
+    }
+
+    public String createAccount(String clientID, String username, String pwd, String role, String visID){
+        for (Account account : libraryAccounts){
+            if (account.getUsername().equals(username)){return clientID+",create,duplicate-username;";}
+            if (account.getVisitorAccount().getId().equals(visID)){return clientID+",create,duplicate-visitor;";}
+        }
+        Visitor visitor = null;
+        for(Visitor v : visitorList){
+            if (v.getId().equals(visID)){
+                visitor = v;
+                break;
+                }
+        }
+        if (visitor == null){return clientID+",create,invalid-visitor;";}
+        libraryAccounts.add(new Account(username,pwd,role,visitor,clientID));
+        unregisteredClients.remove(clientID);
+        return clientID+",create,success;";
+    }
+
+    /**
+     * Checks if a client ID is logged into the system.
+     * @param id the ID to be checked for
+     *
+     * @return 0 if the id is not found
+     * @return 1 if the id is associated with a Visitor
+     * @return 2 if the id is associated with a Employee
+     * @return 3 if the id is not associated with an account
+     */
+    private int checkClientID(String id){
+        for (Account account : libraryAccounts){
+            if (account.getClientID().equals(id)){return account.getType()== Account.AccountType.VISITOR ? 1 : 2;}
+        }
+        for (String testID : unregisteredClients){
+            if(testID.equals(id)){return 3;}
+        }
+        return 0;
     }
 }
