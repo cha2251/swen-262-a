@@ -36,6 +36,7 @@ public class Library {
     private List<Book> queriedBooks = new ArrayList<>();
     private List<Account> libraryAccounts = new ArrayList<>();
     private List<String> unregisteredClients = new ArrayList<>();
+    private APIBooks api = new APIBooks();
 
 
     private Library() {
@@ -454,7 +455,13 @@ public class Library {
             try {
                 toAdd.add(queriedBooks.get(Integer.parseInt(book)));
             } catch (Exception e) {
-                failList.add(book);
+                Book b = api.getBook(book);
+                if(b == null) {
+                    failList.add(book);
+                }
+                else {
+                    toAdd.add(b);
+                }
             }
         }
         if (failList.size() > 0) return "invalid-book-id," + failList + ";";
@@ -466,10 +473,6 @@ public class Library {
             str.append(b.toString()).deleteCharAt(str.length() - 1).append(",").append(amount).append("\n");
         }
         return str.toString();
-    }
-
-    public void markRequest(Request request) {
-        requests.add(request);
     }
 
     /**
