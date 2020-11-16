@@ -13,7 +13,7 @@ public class ClientTab {
 
     public ClientTab(){
         VBox page = new VBox();
-        TextArea output = new TextArea("Welcome to the Library Management System. Type 'connect;' to begin!");
+        TextArea output = new TextArea("Welcome to the Library Management System. Type 'connect;' to begin!\n");
         output.setPrefRowCount(30);
         output.setPrefColumnCount(60);
         output.setWrapText(true);
@@ -23,7 +23,7 @@ public class ClientTab {
         Button enterButton = new Button("Enter");
         TextField input = new TextField();
         input.setPrefColumnCount(60);
-        enterButton.setOnAction( e -> runCommand(input.getText(), output));
+        enterButton.setOnAction( e -> runCommand(input, output));
         inputBar.getChildren().add(input);
         inputBar.getChildren().add(enterButton);
 
@@ -31,17 +31,29 @@ public class ClientTab {
         page.getChildren().add(inputBar);
 
         tab = new Tab("New User" , page);
+        clientID = "";
     }
 
     public Tab getTab() {
         return tab;
     }
 
-    private void runCommand(String command, TextArea output){
+    private void runCommand(TextField input, TextArea output){
+        String command = input.getText();
+        input.setText("");
         String current = output.getText();
         current += ""+command+"\n";
-        current += ""+handle(command)+"\n";
+        String response = handle(clientID+command);
+        guiUpdate(response);
+        current += ""+response+"\n";
         output.setText(current);
+    }
+
+    private void guiUpdate(String response){
+        String[] args = response.split(",");
+        if (args[0].equals("connect")) {
+            clientID = args[1].substring(0,args[1].length()-1)+",";
+        }
     }
 
     public static String handle(String input) {

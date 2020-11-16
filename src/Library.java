@@ -21,6 +21,7 @@ public class Library {
 
     private static String root;
     private static int currentID = 1;
+    private static int currentConnectionID = 1;
     private static Library instance = new Library();
     int total_visits = 0;
     long length_seconds = 0;
@@ -621,5 +622,12 @@ public class Library {
         long seconds = start.until(end, ChronoUnit.SECONDS);
         length_seconds += seconds;
         average_length_seconds = length_seconds / total_visits;
+    }
+
+    public String connect(){
+        String str = "" + currentConnectionID++;
+        String id = ("0000000000" + str).substring(str.length());
+        //TODO Add id to Visitor/Account?
+        return id;
     }
 }

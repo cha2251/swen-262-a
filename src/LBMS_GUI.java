@@ -2,11 +2,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.Scanner;
 
 public class LBMS_GUI extends  Application{
     private Stage mainStage;
@@ -14,6 +11,9 @@ public class LBMS_GUI extends  Application{
     @Override
     public void start(Stage stage) throws Exception {
         mainStage = stage;
+        stage.setWidth(800);
+        stage.setHeight(600);
+
         AnchorPane tabRow = new AnchorPane();
         TabPane tabPane = new TabPane();
         Button newTabButton = new Button("+");
@@ -49,7 +49,6 @@ public class LBMS_GUI extends  Application{
         Library library = Library.getInstance();
         library.startUp(root);
         Application.launch();
-        Scanner scanner = new Scanner(System.in);
     }
 
     private Tab createNewPage(){
