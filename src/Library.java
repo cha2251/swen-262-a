@@ -33,6 +33,7 @@ public class Library {
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
     private List<Book> queriedBooks = new ArrayList<>();
+    private APIBooks api = new APIBooks();
 
 
     private Library() {
@@ -435,13 +436,20 @@ public class Library {
      * @return
      */
     public String buyBook(ArrayList<String> bookID, int amount) {
+        System.out.println(bookID);
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
             try {
                 toAdd.add(queriedBooks.get(Integer.parseInt(book)));
             } catch (Exception e) {
-                failList.add(book);
+                Book b = api.getBook(book);
+                if(b == null) {
+                    failList.add(book);
+                }
+                else {
+                    toAdd.add(b);
+                }
             }
         }
         if (failList.size() > 0) return "invalid-book-id," + failList + ";";
@@ -453,10 +461,6 @@ public class Library {
             str.append(b.toString()).deleteCharAt(str.length() - 1).append(",").append(amount).append("\n");
         }
         return str.toString();
-    }
-
-    public void markRequest(Request request) {
-        requests.add(request);
     }
 
     /**
