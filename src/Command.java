@@ -8,7 +8,7 @@ public class Command {
 
     private String command;
     private String[] args;
-    private ArrayList<String> dates;
+    private ArrayList<LocalDateTime> dates;
 
 
     /**
@@ -26,7 +26,7 @@ public class Command {
      * @param command
      * @param args
      */
-    public Command(String command, String[] args, ArrayList<String> dates){
+    public Command(String command, String[] args, ArrayList<LocalDateTime> dates){
         this.args = args;
         this.command = command;
         this.dates = dates;
@@ -52,7 +52,7 @@ public class Command {
      * Getter for Dates
      * @return
      */
-    public ArrayList<String> getDates() {
+    public ArrayList<LocalDateTime> getDates() {
         return dates;
     }
 

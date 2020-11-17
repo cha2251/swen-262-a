@@ -27,22 +27,28 @@ public class UndoRedo {
             String[] args = undoList.get(0).getArgs();
             switch (com) {
                 case "Advance":
-                    AdvanceRequest.undo(args);
+                    AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
+                    advanceRequest.undo(args);
                     break;
                 case "Borrow":
-                    BorrowRequest.undo(args);
+                    BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
+                    borrowRequest.undo(args);
                     break;
                 case "Buy":
-                    BuyRequest.undo(args);
+                    BuyRequest buyRequest = new BuyRequest(Library.getInstance());
+                    buyRequest.undo(args);
                     break;
                 case "Depart":
-                    DepartRequest.undo(args);
+                    DepartRequest departRequest = new DepartRequest(Library.getInstance());
+                    departRequest.undo(args);
                     break;
                 case "Pay":
-                    PayRequest.undo(args);
+                    PayRequest payRequest = new PayRequest(Library.getInstance());
+                    payRequest.undo(args);
                     break;
                 case "Return":
-                    ReturnRequest.undo(args, undoList.get(0).getDates());
+                    ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
+                    returnRequest.undo(args, undoList.get(0).getDates());
             }
 
             redoList.add(0, undoList.remove(0));
@@ -55,22 +61,28 @@ public class UndoRedo {
             String[] args = redoList.get(0).getArgs();
             switch (com) {
                 case "Advance":
-                    AdvanceRequest.execute(args);
+                    AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
+                    advanceRequest.execute(args);
                     break;
                 case "Borrow":
-                    BorrowRequest.execute(args);
+                    BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
+                    borrowRequest.execute(args);
                     break;
                 case "Buy":
-                    BuyRequest.execute(args);
+                    BuyRequest buyRequest = new BuyRequest(Library.getInstance());
+                    buyRequest.execute(args);
                     break;
                 case "Depart":
-                    DepartRequest.execute(args);
+                    DepartRequest departRequest = new DepartRequest(Library.getInstance());
+                    departRequest.execute(args);
                     break;
                 case "Pay":
-                    PayRequest.execute(args);
+                    PayRequest payRequest = new PayRequest(Library.getInstance());
+                    payRequest.execute(args);
                     break;
                 case "Return":
-                    ReturnRequest.execute(args);
+                    ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
+                    returnRequest.execute(args);
             }
 
             undoList.add(0, redoList.remove(0));

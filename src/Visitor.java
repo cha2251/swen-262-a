@@ -55,7 +55,7 @@ public class Visitor {
      * @param dates
      * @return
      */
-    public void borrowBookForUndo(List<Book> books, ArrayList<String> dates, double fine){
+    public void borrowBookForUndo(List<Book> books, ArrayList<LocalDateTime> dates, double fine){
         for (int i = 0; i < books.size(); i++){
             borrowedBooks.add(new BorrowedBook(books.get(i), dates.get(i)));
         }
@@ -127,10 +127,9 @@ public class Visitor {
      * @param books
      * @return
      */
-    public ArrayList<String> checkOutDates(List<Book> books) {
-        ArrayList<String> dates = new ArrayList<String>();
+    public ArrayList<LocalDateTime> checkOutDates(List<Book> books) {
+        ArrayList<LocalDateTime> dates = new ArrayList<LocalDateTime>();
         for (Book book : books) {
-            double status = 0;
             for (BorrowedBook borrowedBook : borrowedBooks){
                 dates.add(borrowedBook.getCheckoutDate());
             }

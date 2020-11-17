@@ -617,7 +617,7 @@ public class Library {
     }
 
 
-    public ArrayList<String> borrowedDates(String id, ArrayList<String> bookID){
+    public ArrayList<LocalDateTime> borrowedDates(String id, ArrayList<String> bookID){
         if (!isVisiting(id)) return null;
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);

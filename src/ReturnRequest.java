@@ -26,7 +26,7 @@ public class ReturnRequest implements Request {
         if (args.length >= 3) {
             String visitor = args[1];
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
-            ArrayList<String> dates = library.borrowedDates(visitor, ids);
+            ArrayList<LocalDateTime> dates = library.borrowedDates(visitor, ids);
             args.add(String.valueOf(library.getFine(visitor, ids)));
             UndoRedo.addCommand(new Command("Return", args, dates));
             return prefix + library.returnBook(visitor, ids);
@@ -34,7 +34,7 @@ public class ReturnRequest implements Request {
         return prefix + "visitor ID,id,[ids];";
     }
 
-    public String undo(String[] args, ArrayList<String> dates) {
+    public String undo(String[] args, ArrayList<LocalDateTime> dates) {
         String prefix = args[0] + ",";
         if (args.length >= 3) {
             String visitor = args[1];
