@@ -57,4 +57,22 @@ public class BorrowRequest implements Request {
         }
         return "Undid Borrow Book";
     }
+
+    /**
+     * redo an undone Borrow Request
+     * @param args
+     * @return
+     */
+    public String redo(String[] args) {
+        String prefix = args[0] + ",";
+        if (args.length == 4) {
+            String visitor = args[1];
+            String ids = args[2];
+            String fixed = ids.replace("{", "").replace("}", "");
+            String[] tentativeList = fixed.split(",");
+            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
+            return library.redoBorrowBook(visitor, books, dates);
+        }
+        return "Redid Borrow Book";
+    }
 }

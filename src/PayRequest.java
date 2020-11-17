@@ -36,7 +36,7 @@ public class PayRequest implements Request {
      * @param args
      * @return
      */
-    public String execute(String[] args) {
+    public String undo(String[] args) {
         String prefix = args[0] + ",";
         if (args.length == 3) {
             String visitor = args[1];

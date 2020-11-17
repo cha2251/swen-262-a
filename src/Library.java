@@ -486,6 +486,36 @@ public class Library {
         return "Undid Book Borrow";
     }
 
+    /**
+     * Undo a borrow book request
+     * @param id
+     * @param bookID
+     * @return
+     */
+    public String redoBorrowBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
+        List<Book> returning = new ArrayList<>();
+        Visitor visitor = getVisitor(id);
+        queriedBooks.clear();
+        for (BorrowedBook b : visitor.findBorrowedBooks()) {
+            queriedBooks.add(b.getBook());
+        }
+        //Query all of the users borrowed books
+        List<String> failList = new ArrayList<>();
+        for (String bID : bookID) {
+            try {
+                returning.add(queriedBooks.get(Integer.parseInt(bID)));
+            } catch (Exception e) {
+                failList.add(bID);
+            }
+        }
+        if (failList.size() > 0) return "Redid Book Borrow";
+
+
+        visitor.borrowBookForUndo(returning, dates);
+
+        return "Redid Book Borrow";
+    }
+
 
     /**
      * Allows a book to be bought for an amount of money, removes the book from availability

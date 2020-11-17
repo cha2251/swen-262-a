@@ -14,12 +14,36 @@ public class UndoRedo {
 
     public void addCommand(Command command){
         undoList.add(0, command);
+        if (redoList.size() > 0) {
+            redoList = new ArrayList<>();
+        }
     }
 
     public void undoCommand(){
         if (undoList.size() > 0){
             //actually running command
             //Add: Advance, borrow, buy, Depart, Pay, Return
+            String com = undoList.get(0).getCommand();
+            String[] args = undoList.get(0).getArgs();
+            switch (com) {
+                case "Advance":
+                    AdvanceRequest.undo(args);
+                    break;
+                case "Borrow":
+                    BorrowRequest.undo(args);
+                    break;
+                case "Buy":
+                    BuyRequest.undo(args);
+                    break;
+                case "Depart":
+                    DepartRequest.undo(args);
+                    break;
+                case "Pay":
+                    PayRequest.undo(args);
+                    break;
+                case "Return":
+                    ReturnRequest.undo(args);
+            }
 
             redoList.add(0, undoList.remove(0));
         }
@@ -27,7 +51,27 @@ public class UndoRedo {
 
     public void redoCommand(){
         if (redoList.size() > 0){
-            //actually running command
+            String com = redoList.get(0).getCommand();
+            String[] args = redoList.get(0).getArgs();
+            switch (com) {
+                case "Advance":
+                    AdvanceRequest.execute(args);
+                    break;
+                case "Borrow":
+                    BorrowRequest.redo(args);
+                    break;
+                case "Buy":
+                    BuyRequest.execute(args);
+                    break;
+                case "Depart":
+                    DepartRequest.execute(args);
+                    break;
+                case "Pay":
+                    PayRequest.execute(args);
+                    break;
+                case "Return":
+                    ReturnRequest.redo(args);
+            }
 
             undoList.add(0, redoList.remove(0));
         }

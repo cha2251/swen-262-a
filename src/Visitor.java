@@ -50,12 +50,12 @@ public class Visitor {
     }
 
     /**
-     * borrow book method designed for undoing a return request
+     * borrow book method designed for undoing a request
      * @param books
      * @param dates
      * @return
      */
-    public void borrowBookForUndo(List<Book> books, Arrylist<String> dates){
+    public void borrowBookForUndo(List<Book> books, ArrayList<String> dates){
         for (int i = 0; i < books.size(); i++){
             borrowedBooks.add(new BorrowedBook(books.get(i), dates.get(i)));
         }
@@ -94,6 +94,11 @@ public class Visitor {
         return fine;
     }
 
+    /**
+     * return book method designed for undoing a request
+     * @param books
+     * @param dates
+     */
     public void returnBookForUndo(List<Book> books, ArrayList<String> dates){
         for (int i = 0; i < books.size(); i++){
             borrowedBooks.remove(new BorrowedBook(books.get(i), dates.get(i)));

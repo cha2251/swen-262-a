@@ -21,6 +21,22 @@ public class Command {
     }
 
     /**
+     * Getter for command
+     * @return
+     */
+    public String getCommand() {
+        return command;
+    }
+
+    /**
+     * Getter for args
+     * @return
+     */
+    public String[] getArgs() {
+        return args;
+    }
+
+    /**
      * Formatting of toString of the command object
      * @return
      */
