@@ -33,7 +33,7 @@ public class Library {
     private Catalog catalog = new Catalog();
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
-    private List<Book> queriedBooks = new ArrayList<>();
+    private List<RealBook> queriedBooks = new ArrayList<>();
     private List<Account> libraryAccounts = new ArrayList<>();
     private List<String> unregisteredClients = new ArrayList<>();
     private APIBooks api;
@@ -74,7 +74,7 @@ public class Library {
                     break;
                 case BORROWED_BOOK:
                     List<String> bookID = Arrays.asList(args[3]);
-                    List<Book> books = (List<Book>) catalog.getBooks(bookID);
+                    List<RealBook> books = (List<RealBook>) catalog.getBooks(bookID);
                     getVisitor(args[2]).borrowBook(books, LocalDateTime.parse(args[4], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     break;
                 case PAYMENT:
@@ -83,11 +83,11 @@ public class Library {
                     break;
                 case RETURN_BOOK:
                     List<String> returnBookID = Arrays.asList(args[3]);
-                    List<Book> returnBooks = (List<Book>) catalog.getBooks(returnBookID);
+                    List<RealBook> returnBooks = (List<RealBook>) catalog.getBooks(returnBookID);
                     getVisitor(args[2]).returnBook(returnBooks, LocalDateTime.parse(args[4], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                     break;
                 case OWNED_BOOK:
-                    for (Book b : (List<Book>) catalog.sortPurchasable()) {
+                    for (RealBook b : (List<RealBook>) catalog.sortPurchasable()) {
                         if (b.getIsbn() == Long.parseLong(args[2])) {
                             catalog.buyBook(b, Integer.parseInt(args[3]));
                         }
@@ -230,7 +230,7 @@ public class Library {
         String publisher = args.get(3);
         String publishedDate = args.get(4);
         int pages = Integer.parseInt(args.get(5));
-        Book book = new Book(isbn, title, authorsString, publisher, publishedDate, pages);
+        RealBook book = new RealBook(isbn, title, authorsString, publisher, publishedDate, pages);
         catalog.addBook(book);
 
     }
@@ -384,13 +384,13 @@ public class Library {
         search = new SearchAuthor(search, authors);
         search = new SearchISBN(search, isbn);
         search = new SearchPublisher(search, publisher);
-        List<Book> results = search.result(catalog.sortCatalog());
+        List<RealBook> results = search.result(catalog.sortCatalog());
 
         StringBuilder str = new StringBuilder();
         queriedBooks.clear();
         str.append(results.size()).append(",\n");
         int index = 0;
-        for (Book b : results) {
+        for (RealBook b : results) {
             queriedBooks.add(b);
             str.append(index++).append(",").append(b.toString());
         }
@@ -435,11 +435,11 @@ public class Library {
         if (visitor.getFinesOwed() > 0) return "outstanding-fine," + format.format(visitor.getFinesOwed());
         //Save action to file
         LocalDateTime time = getLibraryTime();
-        for (Book b : (List<Book>) tempList) {
+        for (RealBook b : (List<RealBook>) tempList) {
             utils.addEntry(StoredType.BORROWED_BOOK,
                     new String[]{id, String.valueOf(b.getIsbn()), time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
         }
-        return visitor.borrowBook((List<Book>) tempList, time);
+        return visitor.borrowBook((List<RealBook>) tempList, time);
     }
 
     /**
@@ -451,12 +451,12 @@ public class Library {
     public String buyBook(ArrayList<String> bookID, int amount, String clientID) {
         if (checkClientID(clientID)==0){return "buy,invalid-client-id;";}
         List<String> failList = new ArrayList<>();
-        List<Book> toAdd = new ArrayList<>();
+        List<RealBook> toAdd = new ArrayList<>();
         for (String book : bookID) {
             try {
                 toAdd.add(queriedBooks.get(Integer.parseInt(book)));
             } catch (Exception e) {
-                Book b = api.getBook(book);
+                RealBook b = api.getBook(book);
                 if(b == null) {
                     failList.add(book);
                 }
@@ -468,7 +468,7 @@ public class Library {
         if (failList.size() > 0) return "invalid-book-id," + failList + ";";
         StringBuilder str = new StringBuilder();
         str.append(toAdd.size()).append(",\n");
-        for (Book b : toAdd) {
+        for (RealBook b : toAdd) {
             catalog.buyBook(b, amount);
             utils.addEntry(StoredType.OWNED_BOOK, new String[]{String.valueOf(b.getIsbn()), String.valueOf(amount)});
             str.append(b.toString()).deleteCharAt(str.length() - 1).append(",").append(amount).append("\n");
@@ -505,7 +505,7 @@ public class Library {
     public String returnBook(String id, ArrayList<String> bookID, String clientID) {
         if (checkClientID(clientID)==0){return "return,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
-        List<Book> returning = new ArrayList<>();
+        List<RealBook> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
         queriedBooks.clear();
         for (BorrowedBook b : visitor.findBorrowedBooks()) {
@@ -523,7 +523,7 @@ public class Library {
         if (failList.size() > 0) return "invalid-book-id," + failList + ";";
         LocalDateTime time = getLibraryTime();
 
-        for (Book b : returning) {
+        for (RealBook b : returning) {
             utils.addEntry(StoredType.RETURN_BOOK, new String[]{id, String.valueOf(b.getIsbn()), time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)});
         }
 

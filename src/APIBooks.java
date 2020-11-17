@@ -19,7 +19,7 @@ public class APIBooks {
     public APIBooks(FileUtils utils) {
         this.utils = utils;
     }
-    public Book getBook(String isbn) {
+    public RealBook getBook(String isbn) {
         try {
             responseContent = new StringBuffer();
             URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn +"&key=AIzaSyC6w3D0Vkqxhevsjg38toIQIEhQejrjy4M");
@@ -44,7 +44,7 @@ public class APIBooks {
             connection.disconnect();
         }
     }
-    public Book parse(String raw) {
+    public RealBook parse(String raw) {
         if(JsonParser.parseString(raw).isJsonObject()) {
             JsonObject root = JsonParser.parseString(raw).getAsJsonObject();
             if(root.get("totalItems").getAsInt() > 0) {
@@ -60,7 +60,7 @@ public class APIBooks {
                 JsonArray ids = volumeDetails.getAsJsonArray("industryIdentifiers");
                 JsonObject isbn_13 = ids.get(0).getAsJsonObject();
                 JsonElement isbn = isbn_13.get("identifier");
-                Book googleBook = new Book(isbn.getAsLong(), title.getAsString(), authors.getAsString(),
+                RealBook googleBook = new RealBook(isbn.getAsLong(), title.getAsString(), authors.getAsString(),
                         "From Google API (NO PUB)", date.getAsString(), pages.getAsInt());
                 String entry = isbn.getAsLong() + "," + title.toString() + "," +
                         authors.toString().replace("[","{").replace("]","}") +

@@ -22,9 +22,9 @@ public class SearchAuthor extends SearchModifier {
      * @param book
      * @return
      */
-    public List<Book> result(List<Book> book) {
-        List<Book> toReturn = new ArrayList<>();
-        List<Book> toPrune = super.result(book);
+    public List<RealBook> result(List<RealBook> book) {
+        List<RealBook> toReturn = new ArrayList<>();
+        List<RealBook> toPrune = super.result(book);
         //User opted for no title searches
         if (authors.equals("*")) {
             return toPrune;
@@ -32,7 +32,7 @@ public class SearchAuthor extends SearchModifier {
         String fixed = authors.replace("{", "").replace("}", "");
         String[] tentativeList = fixed.split(",");
         //User wants to search based on authors
-        for (Book b : toPrune) {
+        for (RealBook b : toPrune) {
             for (String author : tentativeList) {
                 if (b.authorList.contains(author)) {
                     toReturn.add(b);

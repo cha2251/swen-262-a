@@ -22,7 +22,7 @@ public class SearchModifier implements Search {
      * @return
      */
     @Override
-    public List<Book> result(List<Book> books) {
+    public List<RealBook> result(List<RealBook> books) {
         return search.result(books);
     }
 }

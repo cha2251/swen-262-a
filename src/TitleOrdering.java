@@ -13,10 +13,10 @@ public class TitleOrdering implements Ordering {
      * @return
      */
     @Override
-    public List sort(List<Book> bookList) {
-        bookList.sort(new Comparator<Book>() {
+    public List sort(List<RealBook> bookList) {
+        bookList.sort(new Comparator<RealBook>() {
             @Override
-            public int compare(Book o1, Book o2) {
+            public int compare(RealBook o1, RealBook o2) {
                 return o1.getTitle().compareTo(o2.getTitle());
             }
         });

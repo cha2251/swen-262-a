@@ -5,5 +5,5 @@ import java.util.List;
  * specific criteria
  */
 public interface Search {
-    List<Book> result(List<Book> books);
+    List<RealBook> result(List<RealBook> books);
 }

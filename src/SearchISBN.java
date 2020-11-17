@@ -23,15 +23,15 @@ public class SearchISBN extends SearchModifier {
      * @param book
      * @return
      */
-    public List<Book> result(List<Book> book) {
-        List<Book> toReturn = new ArrayList<>();
-        List<Book> toPrune = super.result(book);
+    public List<RealBook> result(List<RealBook> book) {
+        List<RealBook> toReturn = new ArrayList<>();
+        List<RealBook> toPrune = super.result(book);
         //User opted for no ISBN search
         if (ISBN.equals("*")) {
             return toPrune;
         }
         //User wants to search for ISBN
-        for (Book b : toPrune) {
+        for (RealBook b : toPrune) {
             if (b.isbn == Long.parseLong(ISBN)) {
                 toReturn.add(b);
                 break;

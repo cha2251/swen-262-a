@@ -41,8 +41,8 @@ public class Visitor {
      * @param currentDate
      * @return
      */
-    public String borrowBook(List<Book> books, LocalDateTime currentDate) {
-        for (Book book : books) {
+    public String borrowBook(List<RealBook> books, LocalDateTime currentDate) {
+        for (RealBook book : books) {
             borrowedBooks.add(new BorrowedBook(book, currentDate));
         }
 
@@ -65,9 +65,9 @@ public class Visitor {
      * @param currentDate
      * @return
      */
-    public double returnBook(List<Book> books, LocalDateTime currentDate) {
+    public double returnBook(List<RealBook> books, LocalDateTime currentDate) {
         double fine = 0;
-        for (Book book : books) {
+        for (RealBook book : books) {
             double status = 0;
             for (BorrowedBook borrowedBook : borrowedBooks) {
                 status = borrowedBook.returnBook(book, currentDate);

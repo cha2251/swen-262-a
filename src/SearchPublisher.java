@@ -23,15 +23,15 @@ public class SearchPublisher extends SearchModifier {
      * @param book
      * @return
      */
-    public List<Book> result(List<Book> book) {
-        List<Book> toReturn = new ArrayList<>();
-        List<Book> toPrune = super.result(book);
+    public List<RealBook> result(List<RealBook> book) {
+        List<RealBook> toReturn = new ArrayList<>();
+        List<RealBook> toPrune = super.result(book);
         //User opted for no publisher search
         if (publisher.equals("*")) {
             return toPrune;
         }
         //User wants to search for publisher
-        for (Book b : toPrune) {
+        for (RealBook b : toPrune) {
             if (b.publisher.equalsIgnoreCase(publisher)) {
                 toReturn.add(b);
             }

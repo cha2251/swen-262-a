@@ -8,7 +8,7 @@ public class BorrowedBook {
     This class is used for the creation and management of borrowed books
      */
 
-    private Book book;
+    private RealBook book;
     private LocalDateTime dueDate;
     private LocalDateTime checkoutDate;
 
@@ -17,7 +17,7 @@ public class BorrowedBook {
      * @param book
      * @param checkoutDate
      */
-    public BorrowedBook(Book book, LocalDateTime checkoutDate){
+    public BorrowedBook(RealBook book, LocalDateTime checkoutDate){
         this.book = book;
         book.available--;
         this.checkoutDate = checkoutDate;
@@ -30,7 +30,7 @@ public class BorrowedBook {
      * @param currentDate
      * @return
      */
-    public double returnBook(Book book, LocalDateTime currentDate){
+    public double returnBook(RealBook book, LocalDateTime currentDate){
         if (this.book.equals(book)){
             book.available++;
             return checkFine(currentDate);
@@ -57,7 +57,7 @@ public class BorrowedBook {
      * Returns the book in question
      * @return
      */
-    public Book getBook() {
+    public RealBook getBook() {
         return book;
     }
 

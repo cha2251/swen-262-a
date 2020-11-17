@@ -25,7 +25,7 @@ public class BasicSearch implements Search {
      * @return
      */
     @Override
-    public List result(List<Book> books) {
+    public List result(List<RealBook> books) {
         switch (listType) {
             case PURCHASABLE:
                 return catalog.sortPurchasable();

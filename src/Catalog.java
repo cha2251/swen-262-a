@@ -7,8 +7,8 @@ public class Catalog {
     This class is used for the creation and management of book catalogs
      */
 
-    private List<Book> purchasableList;
-    private List<Book> ownedList;
+    private List<RealBook> purchasableList;
+    private List<RealBook> ownedList;
     private Ordering sortOrder;
     private List sortedList;
 
@@ -25,7 +25,7 @@ public class Catalog {
      * Adds a book to the list of purchasable books
      * @param book
      */
-    public void addBook(Book book) {
+    public void addBook(RealBook book) {
         purchasableList.add(book);
     }
 
@@ -35,7 +35,7 @@ public class Catalog {
      * @param book
      * @param amount
      */
-    public void buyBook(Book book, int amount){
+    public void buyBook(RealBook book, int amount){
         if(!ownedList.contains(book)) {
             ownedList.add(book);
         }
@@ -49,11 +49,11 @@ public class Catalog {
      * @return
      */
     public List<?> getBooks(List<String> ids){
-        List<Book> passList = new ArrayList<>();
+        List<RealBook> passList = new ArrayList<>();
         List<String> failList = new ArrayList<>();
         failList.addAll(ids);
         for (String id : ids) {
-            for (Book book : ownedList) {
+            for (RealBook book : ownedList) {
                 if (book.getIsbn() == Long.parseLong(id)) {
                     passList.add(book);
                     failList.remove(id);
@@ -72,11 +72,11 @@ public class Catalog {
      * @return
      */
     public List<?> checkBooks(List<String> ids) {
-        List<Book> books = new ArrayList<>();
+        List<RealBook> books = new ArrayList<>();
         List<String> failList = new ArrayList<>();
         for (String bID : ids) {
             try {
-                books.add((Book) sortedList.get(Integer.parseInt(bID)));
+                books.add((RealBook) sortedList.get(Integer.parseInt(bID)));
             } catch (Exception e) {
                 failList.add(bID);
             }
@@ -108,6 +108,5 @@ public class Catalog {
      */
     public List sortPurchasable() {
         return sortOrder.sort(purchasableList);
-
     }
 }
