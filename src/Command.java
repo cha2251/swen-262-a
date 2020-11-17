@@ -9,6 +9,7 @@ public class Command {
     private String command;
     private String[] args;
     private ArrayList<LocalDateTime> dates;
+    private double fine;
 
 
     /**
@@ -26,10 +27,11 @@ public class Command {
      * @param command
      * @param args
      */
-    public Command(String command, String[] args, ArrayList<LocalDateTime> dates){
+    public Command(String command, String[] args, ArrayList<LocalDateTime> dates, double fine){
         this.args = args;
         this.command = command;
         this.dates = dates;
+        this.fine = fine;
     }
 
     /**
@@ -54,6 +56,14 @@ public class Command {
      */
     public ArrayList<LocalDateTime> getDates() {
         return dates;
+    }
+
+    /**
+     * Getter for fine
+     * @return
+     */
+    public double getFine() {
+        return fine;
     }
 
     /**

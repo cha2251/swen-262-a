@@ -48,7 +48,7 @@ public class UndoRedo {
                     break;
                 case "Return":
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
-                    returnRequest.undo(args, undoList.get(0).getDates());
+                    returnRequest.undo(args, undoList.get(0).getDates(), undoList.get(0).getFine());
             }
 
             redoList.add(0, undoList.remove(0));
