@@ -30,6 +30,10 @@ public class UndoRedo {
                     AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
                     advanceRequest.undo(args);
                     break;
+                case "Arrive":
+                    ArriveRequest arriveRequest = new ArriveRequest(Library.getInstance());
+                    arriveRequest.undo(args);
+                    break;
                 case "Borrow":
                     BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
                     borrowRequest.undo(args);
@@ -63,6 +67,10 @@ public class UndoRedo {
                 case "Advance":
                     AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
                     advanceRequest.execute(args);
+                    break;
+                case "Arrive":
+                    ArriveRequest arriveRequest = new ArriveRequest(Library.getInstance());
+                    arriveRequest.execute(args);
                     break;
                 case "Borrow":
                     BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
