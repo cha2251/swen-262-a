@@ -24,16 +24,16 @@ public class BorrowRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length == 3) {
-            String visitor = args[1];
-            String ids = args[2];
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 4) {
+            String visitor = args[2];
+            String ids = args[3];
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            String str = prefix + library.borrowBook(visitor, books);
             UndoRedo.addCommand(new Command("Borrow", args));
-            return str;
+            return prefix + library.borrowBook(visitor, books, clientID);
         }
         return prefix + "visitor ID,{id};";
     }

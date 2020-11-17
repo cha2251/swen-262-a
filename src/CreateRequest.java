@@ -1,4 +1,4 @@
-public class RegisterRequest implements Request {
+public class CreateRequest implements Request {
 
     /*
     Used for the string formatting of when a new visitor is registered
@@ -10,7 +10,7 @@ public class RegisterRequest implements Request {
      * Instantiates Library in this class
      * @param library
      */
-    public RegisterRequest(Library library) {
+    public CreateRequest(Library library) {
         this.library = library;
     }
 
@@ -23,14 +23,14 @@ public class RegisterRequest implements Request {
     public String execute(String[] args) {
         if (args.length == 6) {
             String clientID = args[0];
-            String firstName = args[2];
-            String lastName = args[3];
-            String address = args[4];
-            String phone = args[5];
+            String username = args[2];
+            String pwd = args[3];
+            String role = args[4].toUpperCase();
+            String visID = args[5];
             //Return error if visitors are duplicate
-            String result = library.registerVisitor(firstName, lastName, address, phone, clientID);
+            String result = library.createAccount(clientID, username, pwd, role,visID);
             return result;
         }
-        return "register,missing-parameters,{first name,last name,address, phone-number};";
+        return "client ID,create,username,password,role,visitor ID;";
     }
 }

@@ -21,14 +21,15 @@ public class InfoRequest implements Request{
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length == 6) {
-            String title = args[1];
-            String authorList = args[2];
-            String isbn = args[3];
-            String publisher = args[4];
-            String sort = args[5];
-            return prefix + library.search(title, authorList, isbn, publisher, sort, BookList.OWNED);
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 7) {
+            String title = args[2];
+            String authorList = args[3];
+            String isbn = args[4];
+            String publisher = args[5];
+            String sort = args[6];
+            return prefix + library.search(title, authorList, isbn, publisher, sort, BookList.OWNED, clientID);
         }
         return prefix + "missing-parameters,{title,{authors},[isbn, [publisher,[sort order]]]};";
     }

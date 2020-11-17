@@ -21,10 +21,11 @@ public class DepartRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length == 2) {
-            String id = args[1];
-            String result = library.endVisit(id);
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 3) {
+            String id = args[2];
+            String result = library.endVisit(id, clientID);
             UndoRedo.addCommand(new Command("Depart", args));
             return prefix + result;
         }

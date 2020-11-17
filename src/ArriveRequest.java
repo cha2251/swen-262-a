@@ -21,9 +21,10 @@ public class ArriveRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        if (args.length == 2) {
-            String id = args[1];
-            String result = library.beginVisit(id);
+        if (args.length == 3) {
+            String clientID = args[0];
+            String id = args[2];
+            String result = library.beginVisit(id,clientID);
             UndoRedo.addCommand(new Command("Arrive", args));
             return result;
         }

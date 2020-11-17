@@ -21,24 +21,25 @@ public class AdvanceRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
+        String cleintID = args[0];
+        String prefix = args[1] + ",";
         //If days are between the range
-        long days = Long.parseLong(args[1]);
+        long days = Long.parseLong(args[2]);
         if (0 > days || days > 7) {
             return prefix + "invalid-number-of-days," + days + ";";
         }
         UndoRedo.addCommand(new Command("Advance", args));
         //If hours is defined
-        if (args.length == 3) {
+        if (args.length == 4) {
             //If hours are between the range
-            long hours = Long.parseLong(args[2]);
+            long hours = Long.parseLong(args[3]);
             if (0 > hours || hours > 23) {
                 return prefix + "invalid-number-of-hours," + hours + ";";
             }
-            library.modifyTime(days, hours);
+            library.modifyTime(days, hours, cleintID);
             return prefix + "success";
         }
-        library.modifyTime(days, 0);
+        library.modifyTime(days, 0, cleintID);
         return prefix + "success";
     }
 

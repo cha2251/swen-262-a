@@ -22,14 +22,15 @@ public class ReturnRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length >= 3) {
-            String visitor = args[1];
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length >= 4) {
+            String visitor = args[2];
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
             ArrayList<LocalDateTime> dates = library.borrowedDates(visitor, ids);
             args.add(String.valueOf(library.getFine(visitor, ids)));
             UndoRedo.addCommand(new Command("Return", args, dates));
-            return prefix + library.returnBook(visitor, ids);
+            return prefix + library.returnBook(visitor, ids, clientID);
         }
         return prefix + "visitor ID,id,[ids];";
     }

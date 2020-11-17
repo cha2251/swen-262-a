@@ -21,6 +21,7 @@ public class Library {
 
     private static String root;
     private static int currentID = 1;
+    private static int currentConnectionID = 1;
     private static Library instance = new Library();
     int total_visits = 0;
     long length_seconds = 0;
@@ -33,6 +34,9 @@ public class Library {
     private List<Visitor> visitorList = new ArrayList<>();
     private List<Visit> activeVisits = new ArrayList<>();
     private List<Book> queriedBooks = new ArrayList<>();
+    private List<Account> libraryAccounts = new ArrayList<>();
+    private List<String> unregisteredClients = new ArrayList<>();
+    private APIBooks api;
 
 
     private Library() {
@@ -120,6 +124,7 @@ public class Library {
         Library.root = root;
         FileUtils utils = new FileUtils(root);
         this.utils = utils;
+        api = new APIBooks(utils);
         loadBooks(new File(root + "/data/books.txt"));
         File info = new File(root + "/data/config.properties");
         if (info.exists()) {
@@ -165,7 +170,8 @@ public class Library {
      * @param hours
      * @return
      */
-    public LocalDateTime modifyTime(long days, long hours) {
+    public LocalDateTime modifyTime(long days, long hours, String clientID) {
+        if (checkClientID(clientID)==0){return getLibraryTime();}
         //Update modified time
         modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
 
@@ -215,6 +221,9 @@ public class Library {
         }
         args.add(current.toString());
 
+        if(args.get(0).isEmpty()) {
+            return;
+        }
         long isbn = Long.parseLong(args.get(0));
         String title = args.get(1).replace("\"", "");
         String authorsString = args.get(2).replace("{", "").replace("}", "");
@@ -317,7 +326,8 @@ public class Library {
      * @param phoneNumber
      * @return
      */
-    public String registerVisitor(String firstName, String lastName, String address, String phoneNumber) {
+    public String registerVisitor(String firstName, String lastName, String address, String phoneNumber, String clientID) {
+        if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
         String str = "" + currentID++;
         String id = ("0000000000" + str).substring(str.length());
 
@@ -340,7 +350,8 @@ public class Library {
      * @param id
      * @return
      */
-    public String beginVisit(String id) {
+    public String beginVisit(String id, String clientID) {
+        if (checkClientID(clientID)==0){return "arrive,invalid-client-id;";}
         if (getVisitor(id) == null) {
             return "arrive,invalid-id;";
         }
@@ -378,7 +389,8 @@ public class Library {
      * @param listType
      * @return
      */
-    public String search(String title, String authors, String isbn, String publisher, String sort, BookList listType) {
+    public String search(String title, String authors, String isbn, String publisher, String sort, BookList listType, String clientID) {
+        if (checkClientID(clientID)==0){return "search,invalid-client-id;";}
         Search search = new BasicSearch(catalog, listType);
         search = new SearchTitle(search, title);
         search = new SearchAuthor(search, authors);
@@ -402,7 +414,8 @@ public class Library {
      * @param id
      * @return
      */
-    public String endVisit(String id) {
+    public String endVisit(String id, String clientID) {
+        if (checkClientID(clientID)==0){return "depart,invalid-client-id;";}
         if (getVisitor(id) == null) {
             return "invalid-id;";
         }
@@ -440,7 +453,8 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String borrowBook(String id, ArrayList<String> bookID) {
+    public String borrowBook(String id, ArrayList<String> bookID, String clientID) {
+        if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<?> tempList = catalog.checkBooks(bookID);
         if (tempList.get(0) instanceof String) return "invalid-book-id,{" + tempList + "};";
@@ -494,14 +508,21 @@ public class Library {
      * @param amount
      * @return
      */
-    public String buyBook(ArrayList<String> bookID, int amount) {
+    public String buyBook(ArrayList<String> bookID, int amount, String clientID) {
+        if (checkClientID(clientID)==0){return "buy,invalid-client-id;";}
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
             try {
                 toAdd.add(queriedBooks.get(Integer.parseInt(book)));
             } catch (Exception e) {
-                failList.add(book);
+                Book b = api.getBook(book);
+                if(b == null) {
+                    failList.add(book);
+                }
+                else {
+                    toAdd.add(b);
+                }
             }
         }
         if (failList.size() > 0) return "invalid-book-id," + failList + ";";
@@ -547,7 +568,8 @@ public class Library {
      * @param id
      * @return
      */
-    public String findBorrowedBooks(String id){
+    public String findBorrowedBooks(String id, String clientID){
+        if (checkClientID(clientID)==0){return "borrowed,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-vsitor-id;";
         queriedBooks.clear();
         Visitor visitor = getVisitor(id);
@@ -567,7 +589,8 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String returnBook(String id, ArrayList<String> bookID) {
+    public String returnBook(String id, ArrayList<String> bookID, String clientID) {
+        if (checkClientID(clientID)==0){return "return,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
@@ -658,7 +681,8 @@ public class Library {
      * @param amount
      * @return
      */
-    public String payFine(String id, String amount) {
+    public String payFine(String id, String amount, String clientID) {
+        if (checkClientID(clientID)==0){return "pay,invalid-client-id;";}
         if (!isVisiting(id)) return "invalid-visitor-id;";
         Visitor visitor = getVisitor(id);
         double balance = visitor.getFinesOwed();
@@ -689,7 +713,8 @@ public class Library {
      * @param days
      * @return
      */
-    public String generateReport(int days) {
+    public String generateReport(int days, String clientID) {
+        if (checkClientID(clientID)==0){return "pay,invalid-client-id;";}
         String n = ",\n";
         int books = 0;
         int total_visitors = 0;
@@ -774,5 +799,68 @@ public class Library {
         long seconds = start.until(end, ChronoUnit.SECONDS);
         length_seconds += seconds;
         average_length_seconds = length_seconds / total_visits;
+    }
+
+    public String connect(){
+        String str = "" + currentConnectionID++;
+        String id = ("0000000000" + str).substring(str.length());
+        unregisteredClients.add(id);
+        return id;
+    }
+
+    public String disconnect(String id){
+        switch (checkClientID(id)) {
+            case 0:
+                return "invalid-client-id;";
+            case 1:
+            case 2:
+                for (Account account : libraryAccounts){
+                    if(account.getClientID().equals(id)){account.setClientID("");}
+                }
+                break;
+            case 3:
+                for (String testID : unregisteredClients){
+                    if(testID.equals(id)){unregisteredClients.remove(testID);}
+                    break;
+                }
+        }
+        return id+",disconnect;";
+    }
+
+    public String createAccount(String clientID, String username, String pwd, String role, String visID){
+        for (Account account : libraryAccounts){
+            if (account.getUsername().equals(username)){return clientID+",create,duplicate-username;";}
+            if (account.getVisitorAccount().getId().equals(visID)){return clientID+",create,duplicate-visitor;";}
+        }
+        Visitor visitor = null;
+        for(Visitor v : visitorList){
+            if (v.getId().equals(visID)){
+                visitor = v;
+                break;
+                }
+        }
+        if (visitor == null){return clientID+",create,invalid-visitor;";}
+        libraryAccounts.add(new Account(username,pwd,role,visitor,clientID));
+        unregisteredClients.remove(clientID);
+        return clientID+",create,success;";
+    }
+
+    /**
+     * Checks if a client ID is logged into the system.
+     * @param id the ID to be checked for
+     *
+     * @return 0 if the id is not found
+     * @return 1 if the id is associated with a Visitor
+     * @return 2 if the id is associated with a Employee
+     * @return 3 if the id is not associated with an account
+     */
+    private int checkClientID(String id){
+        for (Account account : libraryAccounts){
+            if (account.getClientID().equals(id)){return account.getType()== Account.AccountType.VISITOR ? 1 : 2;}
+        }
+        for (String testID : unregisteredClients){
+            if(testID.equals(id)){return 3;}
+        }
+        return 0;
     }
 }
