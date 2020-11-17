@@ -667,7 +667,7 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String undoReturnBook(String id, ArrayList<String> bookID, ArrayList<String> dates, double fine) {
+    public String undoReturnBook(String id, ArrayList<String> bookID, ArrayList<LocalDateTime> dates, double fine) {
         List<?> tempList = catalog.checkBooks(bookID);
         Visitor visitor = getVisitor(id);
         visitor.borrowBookForUndo((List<Book>) tempList, dates, fine);

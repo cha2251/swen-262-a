@@ -32,7 +32,7 @@ public class BuyRequest implements Request {
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            UndoRedo.addCommand(new Command("Buy", args));
+            UndoRedo.getInstance().addCommand(new Command("Buy", args));
             return prefix + library.buyBook(books, Integer.parseInt(amount),clientID);
         }
         return prefix + "quantity,id[ids];";

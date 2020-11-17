@@ -32,7 +32,7 @@ public class BorrowRequest implements Request {
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            UndoRedo.addCommand(new Command("Borrow", args));
+            UndoRedo.getInstance().addCommand(new Command("Borrow", args));
             return prefix + library.borrowBook(visitor, books, clientID);
         }
         return prefix + "visitor ID,{id};";

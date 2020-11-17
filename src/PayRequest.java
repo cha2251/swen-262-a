@@ -26,7 +26,7 @@ public class PayRequest implements Request {
         if (args.length == 4) {
             String visitor = args[2];
             String amount = args[3];
-            UndoRedo.addCommand(new Command("Pay", args));
+            UndoRedo.getInstance().addCommand(new Command("Pay", args));
             return prefix + library.payFine(visitor, amount, clientID);
         }
         return prefix + "visitor ID,amount;";

@@ -26,7 +26,7 @@ public class DepartRequest implements Request {
         if (args.length == 3) {
             String id = args[2];
             String result = library.endVisit(id, clientID);
-            UndoRedo.addCommand(new Command("Depart", args));
+            UndoRedo.getInstance().addCommand(new Command("Depart", args));
             return prefix + result;
         }
         return prefix + "missing-parameters,{id};";
