@@ -8,6 +8,7 @@ public class Command {
 
     private String command;
     private String[] args;
+    private ArrayList<String> dates;
 
 
     /**
@@ -18,6 +19,17 @@ public class Command {
     public Command(String command, String[] args){
         this.args = args;
         this.command = command;
+    }
+
+    /**
+     * Creation of a command object for return requsts
+     * @param command
+     * @param args
+     */
+    public Command(String command, String[] args, ArrayList<String> dates){
+        this.args = args;
+        this.command = command;
+        this.dates = dates;
     }
 
     /**
@@ -34,6 +46,14 @@ public class Command {
      */
     public String[] getArgs() {
         return args;
+    }
+
+    /**
+     * Getter for Dates
+     * @return
+     */
+    public ArrayList<String> getDates() {
+        return dates;
     }
 
     /**

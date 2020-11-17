@@ -42,7 +42,7 @@ public class UndoRedo {
                     PayRequest.undo(args);
                     break;
                 case "Return":
-                    ReturnRequest.undo(args);
+                    ReturnRequest.undo(args, undoList.get(0).getDates());
             }
 
             redoList.add(0, undoList.remove(0));
@@ -58,7 +58,7 @@ public class UndoRedo {
                     AdvanceRequest.execute(args);
                     break;
                 case "Borrow":
-                    BorrowRequest.redo(args);
+                    BorrowRequest.execute(args);
                     break;
                 case "Buy":
                     BuyRequest.execute(args);
@@ -70,7 +70,7 @@ public class UndoRedo {
                     PayRequest.execute(args);
                     break;
                 case "Return":
-                    ReturnRequest.redo(args);
+                    ReturnRequest.execute(args);
             }
 
             undoList.add(0, redoList.remove(0));

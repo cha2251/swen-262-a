@@ -32,8 +32,6 @@ public class BorrowRequest implements Request {
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
             String str = prefix + library.borrowBook(visitor, books);
-            ArrayList<String> dates = library.borrowedDates(visitor, ids);
-            args.add(dates);
             UndoRedo.addCommand(new Command("Borrow", args));
             return str;
         }
@@ -53,26 +51,10 @@ public class BorrowRequest implements Request {
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            return library.undoBorrowBook(visitor, books, dates);
+            return library.undoBorrowBook(visitor, books);
         }
         return "Undid Borrow Book";
     }
 
-    /**
-     * redo an undone Borrow Request
-     * @param args
-     * @return
-     */
-    public String redo(String[] args) {
-        String prefix = args[0] + ",";
-        if (args.length == 4) {
-            String visitor = args[1];
-            String ids = args[2];
-            String fixed = ids.replace("{", "").replace("}", "");
-            String[] tentativeList = fixed.split(",");
-            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            return library.redoBorrowBook(visitor, books, dates);
-        }
-        return "Redid Borrow Book";
-    }
+
 }

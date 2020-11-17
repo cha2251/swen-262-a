@@ -462,7 +462,7 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String undoBorrowBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
+    public String undoBorrowBook(String id, ArrayList<String> bookID) {
         List<Book> returning = new ArrayList<>();
         Visitor visitor = getVisitor(id);
         queriedBooks.clear();
@@ -481,40 +481,11 @@ public class Library {
         if (failList.size() > 0) return "Undid Book Borrow";
 
 
-        visitor.returnBookForUndo(returning, dates);
+        visitor.returnBookForUndo(returning, getLibraryTime());
 
         return "Undid Book Borrow";
     }
 
-    /**
-     * Undo a borrow book request
-     * @param id
-     * @param bookID
-     * @return
-     */
-    public String redoBorrowBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
-        List<Book> returning = new ArrayList<>();
-        Visitor visitor = getVisitor(id);
-        queriedBooks.clear();
-        for (BorrowedBook b : visitor.findBorrowedBooks()) {
-            queriedBooks.add(b.getBook());
-        }
-        //Query all of the users borrowed books
-        List<String> failList = new ArrayList<>();
-        for (String bID : bookID) {
-            try {
-                returning.add(queriedBooks.get(Integer.parseInt(bID)));
-            } catch (Exception e) {
-                failList.add(bID);
-            }
-        }
-        if (failList.size() > 0) return "Redid Book Borrow";
-
-
-        visitor.borrowBookForUndo(returning, dates);
-
-        return "Redid Book Borrow";
-    }
 
 
     /**
@@ -625,6 +596,27 @@ public class Library {
         return "success;";
     }
 
+    public double getFine(String id, ArrayList<String> bookID){
+        Visitor visitor = getVisitor(id);
+        LocalDateTime time = getLibraryTime();
+        List<Book> returning = new ArrayList<>();
+        queriedBooks.clear();
+        for (BorrowedBook b : visitor.findBorrowedBooks()) {
+            queriedBooks.add(b.getBook());
+        }
+        //Query all of the users borrowed books
+        List<String> failList = new ArrayList<>();
+        for (String bID : bookID) {
+            try {
+                returning.add(queriedBooks.get(Integer.parseInt(bID)));
+            } catch (Exception e) {
+                failList.add(bID);
+            }
+        }
+        return visitor.getFine(returning, time);
+    }
+
+
     public ArrayList<String> borrowedDates(String id, ArrayList<String> bookID){
         if (!isVisiting(id)) return null;
         List<Book> returning = new ArrayList<>();
@@ -652,10 +644,10 @@ public class Library {
      * @param bookID
      * @return
      */
-    public String undoReturnBook(String id, ArrayList<String> bookID, ArrayList<String> dates) {
+    public String undoReturnBook(String id, ArrayList<String> bookID, ArrayList<String> dates, double fine) {
         List<?> tempList = catalog.checkBooks(bookID);
         Visitor visitor = getVisitor(id);
-        visitor.borrowBookForUndo((List<Book>) tempList, dates);
+        visitor.borrowBookForUndo((List<Book>) tempList, dates, fine);
 
         return "Undid Return Request";
     }
