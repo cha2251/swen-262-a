@@ -858,6 +858,17 @@ public class Library {
         return clientID+",login,bad-username-or-password;";
     }
 
+    public String logout(String clientID){
+        if (checkClientID(clientID)==0){return "logout,invalid-client-id;";}
+        for (Account account : libraryAccounts){
+            if (account.getClientID().equals(clientID)){
+                account.setClientID("");
+                unregisteredClients.add(clientID);
+            }
+        }
+        return clientID+",logout,success;";
+    }
+
     /**
      * Checks if a client ID is logged into the system.
      * @param id the ID to be checked for
