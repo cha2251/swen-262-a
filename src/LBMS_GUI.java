@@ -21,8 +21,8 @@ public class LBMS_GUI extends  Application implements ClientType{
         AnchorPane.setTopAnchor(tabPane, 5.0);
         AnchorPane.setLeftAnchor(tabPane, 5.0);
         AnchorPane.setRightAnchor(tabPane, 5.0);
-        AnchorPane.setTopAnchor(newTabButton, 10.0);
-        AnchorPane.setRightAnchor(newTabButton, 10.0);
+        AnchorPane.setTopAnchor(newTabButton, 8.0);
+        AnchorPane.setRightAnchor(newTabButton, 8.0);
         //tabPane.setStyle("-fx-padding: 2 0 0 50;");
 
         Tab tab1 =createNewPage();

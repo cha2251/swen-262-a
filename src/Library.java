@@ -23,9 +23,9 @@ public class Library {
     private static int currentID = 1;
     private static int currentConnectionID = 1;
     private static Library instance = new Library();
-    int total_visits = 0;
-    long length_seconds = 0;
-    long average_length_seconds = 0;
+    private int total_visits = 0;
+    private long length_seconds = 0;
+    private long average_length_seconds = 0;
     private LocalDateTime modifiedTime;
     private FileUtils utils;
     private NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
@@ -124,7 +124,7 @@ public class Library {
         Library.root = root;
         FileUtils utils = new FileUtils(root);
         this.utils = utils;
-        api = new APIBooks(utils);
+        this.api = new APIBooks(utils);
         loadBooks(new File(root + "/data/books.txt"));
         File info = new File(root + "/data/config.properties");
         if (info.exists()) {
@@ -845,6 +845,19 @@ public class Library {
         return clientID+",create,success;";
     }
 
+    public String login(String clientID, String username, String pwd){
+        if (checkClientID(clientID)==0){return "login,invalid-client-id;";}
+        for (Account account : libraryAccounts){
+            if (account.getUsername().equals(username)){
+                if (account.getPassword().equals(pwd)){
+                    return clientID+",login,success;";
+                }
+                break;
+            }
+        }
+        return clientID+",login,bad-username-or-password;";
+    }
+
     /**
      * Checks if a client ID is logged into the system.
      * @param id the ID to be checked for
@@ -863,4 +876,6 @@ public class Library {
         }
         return 0;
     }
+
+
 }

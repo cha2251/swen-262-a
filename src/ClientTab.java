@@ -55,7 +55,9 @@ public class ClientTab {
         String[] commandArgs = command.split(",");
         if (args[0].equals("connect")) {
             clientID = args[1]+",";
-        }else if(args.length > 1 && args[1].equals("create")){
+        }else if(commandArgs.length > 1 && commandArgs[0].equals("create")){
+            tab.setText(commandArgs[1]);
+        }else if(commandArgs.length > 1 && commandArgs[0].equals("login")){
             tab.setText(commandArgs[1]);
         }
 

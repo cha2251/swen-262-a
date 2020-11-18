@@ -1,4 +1,4 @@
-public class DisconnectRequest implements Request {
+public class LoginRequest implements Request {
 
     /*
     Used for the string formatting of when a new visitor is registered
@@ -10,7 +10,7 @@ public class DisconnectRequest implements Request {
      * Instantiates Library in this class
      * @param library
      */
-    public DisconnectRequest(Library library) {
+    public LoginRequest(Library library) {
         this.library = library;
     }
 
@@ -21,10 +21,13 @@ public class DisconnectRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
-        if (args.length == 2) {
-            String result = library.disconnect(args[1]);
+        if (args.length == 4) {
+            String clientID = args[0];
+            String username = args[2];
+            String pwd = args[3];
+            String result = library.login(clientID,username,pwd);
             return result;
         }
-        return "client ID,disconnect;";
+        return "client ID,login,username,password;";
     }
 }
