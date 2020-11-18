@@ -28,7 +28,7 @@ public class AdvanceRequest implements Request {
         if (0 > days || days > 7) {
             return prefix + "invalid-number-of-days," + days + ";";
         }
-        UndoRedo.getInstance().addCommand(new Command("Advance", args));
+        //UndoRedo.getInstance().addCommand(new Command("Advance", args));
         //If hours is defined
         if (args.length == 4) {
             //If hours are between the range
@@ -44,6 +44,11 @@ public class AdvanceRequest implements Request {
     }
 
 
+    /**
+     * This was a class to undo an advance request, but turns out to be unneeded
+     * @param args
+     * @return
+     */
     public String undo(String[] args) {
         String prefix = args[0] + ",";
         String cleintID = args[0];
