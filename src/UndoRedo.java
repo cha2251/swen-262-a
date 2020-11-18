@@ -19,82 +19,90 @@ public class UndoRedo {
         }
     }
 
-    public void undoCommand(){
+    public String undoCommand(){
         if (undoList.size() > 0){
             //actually running command
             //Add: Advance, borrow, buy, Depart, Pay, Return
             String com = undoList.get(0).getCommand();
             String[] args = undoList.get(0).getArgs();
+            String str = "\n";
             switch (com) {
                 case "Advance":
                     AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
-                    advanceRequest.undo(args);
+                    str = advanceRequest.undo(args);
                     break;
                 case "Arrive":
                     ArriveRequest arriveRequest = new ArriveRequest(Library.getInstance());
-                    arriveRequest.undo(args);
+                    str = arriveRequest.undo(args);
                     break;
                 case "Borrow":
                     BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
-                    borrowRequest.undo(args);
+                    str = borrowRequest.undo(args);
                     break;
                 case "Buy":
                     BuyRequest buyRequest = new BuyRequest(Library.getInstance());
-                    buyRequest.undo(args);
+                    str = buyRequest.undo(args);
                     break;
                 case "Depart":
                     DepartRequest departRequest = new DepartRequest(Library.getInstance());
-                    departRequest.undo(args);
+                    str = departRequest.undo(args);
                     break;
                 case "Pay":
                     PayRequest payRequest = new PayRequest(Library.getInstance());
-                    payRequest.undo(args);
+                    str = payRequest.undo(args);
                     break;
                 case "Return":
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
-                    returnRequest.undo(args, undoList.get(0).getDates(), undoList.get(0).getFine());
+                    str = returnRequest.undo(args, undoList.get(0).getDates(), undoList.get(0).getFine());
             }
 
             redoList.add(0, undoList.remove(0));
+            return str;
+        }
+        else{
+            return "Nothing to be undone.";
         }
     }
 
-    public void redoCommand(){
+    public String redoCommand(){
         if (redoList.size() > 0){
             String com = redoList.get(0).getCommand();
             String[] args = redoList.get(0).getArgs();
+            String str = "";
             switch (com) {
                 case "Advance":
                     AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
-                    advanceRequest.execute(args);
+                    str = advanceRequest.execute(args);
                     break;
                 case "Arrive":
                     ArriveRequest arriveRequest = new ArriveRequest(Library.getInstance());
-                    arriveRequest.execute(args);
+                    str = arriveRequest.execute(args);
                     break;
                 case "Borrow":
                     BorrowRequest borrowRequest = new BorrowRequest(Library.getInstance());
-                    borrowRequest.execute(args);
+                    str = borrowRequest.execute(args);
                     break;
                 case "Buy":
                     BuyRequest buyRequest = new BuyRequest(Library.getInstance());
-                    buyRequest.execute(args);
+                    str = buyRequest.execute(args);
                     break;
                 case "Depart":
                     DepartRequest departRequest = new DepartRequest(Library.getInstance());
-                    departRequest.execute(args);
+                    str = departRequest.execute(args);
                     break;
                 case "Pay":
                     PayRequest payRequest = new PayRequest(Library.getInstance());
-                    payRequest.execute(args);
+                    str = payRequest.execute(args);
                     break;
                 case "Return":
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
-                    returnRequest.execute(args);
+                    str = returnRequest.execute(args);
             }
 
             undoList.add(0, redoList.remove(0));
+            return str;
         }
+        return "Nothing to be undone";
     }
 
 
