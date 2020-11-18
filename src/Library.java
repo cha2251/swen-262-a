@@ -171,7 +171,7 @@ public class Library {
      * @return
      */
     public LocalDateTime modifyTime(long days, long hours, String clientID) {
-        if (checkClientID(clientID)==0){return getLibraryTime();}
+        if (checkClientID(clientID)!=2){return getLibraryTime();}
         //Update modified time
         modifiedTime = modifiedTime.plusDays(days).plusHours(hours);
 
@@ -328,6 +328,7 @@ public class Library {
      */
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber, String clientID) {
         if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
+        if (checkClientID(clientID)!=2){return ""+clientID+",<register>,not-authorized;";}
         String str = "" + currentID++;
         String id = ("0000000000" + str).substring(str.length());
 
@@ -510,6 +511,7 @@ public class Library {
      */
     public String buyBook(ArrayList<String> bookID, int amount, String clientID) {
         if (checkClientID(clientID)==0){return "buy,invalid-client-id;";}
+        if (checkClientID(clientID)!=2){return ""+clientID+",<buy>,not-authorized;";}
         List<String> failList = new ArrayList<>();
         List<Book> toAdd = new ArrayList<>();
         for (String book : bookID) {
@@ -715,6 +717,7 @@ public class Library {
      */
     public String generateReport(int days, String clientID) {
         if (checkClientID(clientID)==0){return "pay,invalid-client-id;";}
+        if (checkClientID(clientID)!=2){return ""+clientID+",<register>,not-authorized;";}
         String n = ",\n";
         int books = 0;
         int total_visitors = 0;
