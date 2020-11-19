@@ -98,7 +98,6 @@ public class UndoRedo {
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
                     str = returnRequest.execute(args);
             }
-            System.out.println(redoList.size());
             undoList.add(0, command);
             return str;
         }
