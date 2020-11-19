@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class FileUtils {
-    final String root;
+    public final String root;
 
     public FileUtils(String root) {
         this.root = root;

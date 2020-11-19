@@ -24,6 +24,26 @@ public class BuyRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length >= 4) {
+            String amount = args[2];
+            String ids = args[3];
+            String fixed = ids.replace("{", "").replace("}", "");
+            String[] tentativeList = fixed.split(",");
+            ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
+            UndoRedo.getInstance().addCommand(new Command("Buy", args));
+            return prefix + library.buyBook(books, Integer.parseInt(amount),clientID);
+        }
+        return prefix + "quantity,id[ids];";
+    }
+
+    /**
+     * Undo Buy Request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
         String prefix = args[0] + ",";
         if (args.length >= 3) {
             String amount = args[1];
@@ -31,8 +51,8 @@ public class BuyRequest implements Request {
             String fixed = ids.replace("{", "").replace("}", "");
             String[] tentativeList = fixed.split(",");
             ArrayList<String> books = new ArrayList<>(Arrays.asList(tentativeList));
-            return prefix + library.buyBook(books, Integer.parseInt(amount));
+            return prefix + library.undoBuyBook(books, Integer.parseInt(amount));
         }
-        return prefix + "quantity,id[ids];";
+        return "Undid Buy Book";
     }
 }

@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,12 +23,25 @@ public class ReturnRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length >= 4) {
+            String visitor = args[2];
+            ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 3, args.length)));
+            ArrayList<LocalDateTime> dates = library.borrowedDates(visitor, ids);
+            UndoRedo.getInstance().addCommand(new Command("Return", args, dates, library.getFine(visitor, ids)));
+            return prefix + library.returnBook(visitor, ids, clientID);
+        }
+        return prefix + "visitor ID,id,[ids];";
+    }
+
+    public String undo(String[] args, ArrayList<LocalDateTime> dates, double fine) {
         String prefix = args[0] + ",";
         if (args.length >= 3) {
             String visitor = args[1];
             ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
-            return prefix + library.returnBook(visitor, ids);
+            return library.undoReturnBook(visitor, ids, dates, fine);
         }
-        return prefix + "visitor ID,id,[ids];";
+        return "Undid Return Request";
     }
 }

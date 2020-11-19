@@ -62,6 +62,14 @@ public class BorrowedBook {
     }
 
     /**
+     * Gets the checkout date of a book
+     * @return
+     */
+    public LocalDateTime getCheckoutDate() {
+        return checkoutDate;
+    }
+
+    /**
      * Default formatting for how to print a borrowed book
      * @return
      */

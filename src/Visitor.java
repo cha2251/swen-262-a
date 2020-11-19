@@ -50,6 +50,19 @@ public class Visitor {
     }
 
     /**
+     * borrow book method designed for undoing a request
+     * @param books
+     * @param dates
+     * @return
+     */
+    public void borrowBookForUndo(List<Book> books, ArrayList<LocalDateTime> dates, double fine){
+        for (int i = 0; i < books.size(); i++){
+            borrowedBooks.add(new BorrowedBook(books.get(i), dates.get(i)));
+        }
+        finesOwed -= fine;
+    }
+
+    /**
      * returns list of borrowed books
      *
      * @return
@@ -80,6 +93,48 @@ public class Visitor {
         }
         finesOwed += fine;
         return fine;
+    }
+
+
+    public double getFine(List<Book> books, LocalDateTime currentDate){
+        double fine = 0;
+        for (Book book : books) {
+            double status = 0;
+            for (BorrowedBook borrowedBook : borrowedBooks) {
+                status = borrowedBook.checkFine(currentDate);
+                if (status >= 0) {
+                    fine += status;
+                    break;
+                }
+            }
+        }
+        return fine;
+    }
+
+    /**
+     * return book method designed for undoing a request
+     * @param books
+     * @param dates
+     */
+    public void returnBookForUndo(List<Book> books, LocalDateTime currentDate){
+        for (int i = 0; i < books.size(); i++){
+            borrowedBooks.remove(new BorrowedBook(books.get(i), currentDate));
+        }
+    }
+
+    /**
+     * Gets the checkout dates on a book so that it can be used if a book is returned and the action is undone.
+     * @param books
+     * @return
+     */
+    public ArrayList<LocalDateTime> checkOutDates(List<Book> books) {
+        ArrayList<LocalDateTime> dates = new ArrayList<LocalDateTime>();
+        for (Book book : books) {
+            for (BorrowedBook borrowedBook : borrowedBooks){
+                dates.add(borrowedBook.getCheckoutDate());
+            }
+        }
+        return dates;
     }
 
     /**

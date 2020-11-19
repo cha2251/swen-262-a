@@ -21,12 +21,29 @@ public class PayRequest implements Request {
      */
     @Override
     public String execute(String[] args) {
+        String clientID = args[0];
+        String prefix = args[1] + ",";
+        if (args.length == 4) {
+            String visitor = args[2];
+            String amount = args[3];
+            UndoRedo.getInstance().addCommand(new Command("Pay", args));
+            return prefix + library.payFine(visitor, amount, clientID);
+        }
+        return prefix + "visitor ID,amount;";
+    }
+
+    /**
+     * Undo a Pay Request
+     * @param args
+     * @return
+     */
+    public String undo(String[] args) {
         String prefix = args[0] + ",";
         if (args.length == 3) {
             String visitor = args[1];
             String amount = args[2];
-            return prefix + library.payFine(visitor, amount);
+            return library.undoPayFine(visitor, amount);
         }
-        return prefix + "visitor ID,amount;";
+        return "Undid Pay Fine Request";
     }
 }
