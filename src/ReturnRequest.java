@@ -27,7 +27,7 @@ public class ReturnRequest implements Request {
         String prefix = args[1] + ",";
         if (args.length >= 4) {
             String visitor = args[2];
-            ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
+            ArrayList<String> ids = new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(args, 3, args.length)));
             ArrayList<LocalDateTime> dates = library.borrowedDates(visitor, ids);
             UndoRedo.getInstance().addCommand(new Command("Return", args, dates, library.getFine(visitor, ids)));
             return prefix + library.returnBook(visitor, ids, clientID);

@@ -37,7 +37,7 @@ public class ArriveRequest implements Request {
      * @return
      */
     public String undo(String[] args) {
-        String id = args[1];
+        String id = args[2];
         library.removeVisitor(id);
         return "Undid Arrive Request";
     }

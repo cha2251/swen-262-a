@@ -55,7 +55,6 @@ public class UndoRedo {
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
                     str = returnRequest.undo(args, undoList.get(0).getDates(), undoList.get(0).getFine());
             }
-
             redoList.add(0, undoList.remove(0));
             return str;
         }
@@ -69,6 +68,7 @@ public class UndoRedo {
             String com = redoList.get(0).getCommand();
             String[] args = redoList.get(0).getArgs();
             String str = "";
+            Command command = redoList.get(0);
             switch (com) {
                 case "Advance":
                     AdvanceRequest advanceRequest = new AdvanceRequest(Library.getInstance());
@@ -98,8 +98,8 @@ public class UndoRedo {
                     ReturnRequest returnRequest = new ReturnRequest(Library.getInstance());
                     str = returnRequest.execute(args);
             }
-
-            undoList.add(0, redoList.remove(0));
+            System.out.println(redoList.size());
+            undoList.add(0, command);
             return str;
         }
         return "Nothing to be undone";

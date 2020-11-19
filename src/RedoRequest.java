@@ -1,5 +1,9 @@
 public class RedoRequest implements Request {
 
+
+    public RedoRequest(Library library) {
+    }
+
     /**
      * Request call for redoing a request
      * @param args

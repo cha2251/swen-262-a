@@ -512,4 +512,3 @@
 9781434207845,"Free Climb",{Jake Maddox, Sean Tiffany, Bob Temple},"Capstone",2008-08-01,63
 9780439405065,"The Climb",{Gordon Korman},"Scholastic Inc.",2002,151
 9781615668021,"Two Mountains to Climb",{Philip C. Keeling},"Tate Publishing",2010-07,121
-9780762755349,"How to Rock Climb!",{John Long},"Falcon Guides",2010,320
