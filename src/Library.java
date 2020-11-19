@@ -156,6 +156,10 @@ public class Library {
         System.out.println("Shutting down");
     }
 
+    /**
+     * Returns the current time of the library, including any modifications
+     * @return the time of the library
+     */
     public LocalDateTime getLibraryTime() {
         LocalDateTime realTime = LocalDateTime.now();
         long addedHours = modifiedTime.getHour();
@@ -621,6 +625,12 @@ public class Library {
         return "success;";
     }
 
+    /**
+     * Gets the total fine owned by a vistor returning books
+     * @param id : the visitor id of the returning account
+     * @param bookID : the ids of the books being returned
+     * @return the fine owed
+     */
     public double getFine(String id, ArrayList<String> bookID){
         Visitor visitor = getVisitor(id);
         LocalDateTime time = getLibraryTime();
@@ -641,7 +651,12 @@ public class Library {
         return visitor.getFine(returning, time);
     }
 
-
+    /**
+     * Gets the dates thats books were borrowed
+     * @param id : the visitor id of the borrowing account
+     * @param bookID : the ids of the books being returned
+     * @return the fine owed
+     */
     public ArrayList<LocalDateTime> borrowedDates(String id, ArrayList<String> bookID){
         if (!isVisiting(id)) return null;
         List<Book> returning = new ArrayList<>();
@@ -804,6 +819,10 @@ public class Library {
         average_length_seconds = length_seconds / total_visits;
     }
 
+    /**
+     * Assigns a client ID to a new client
+     * @return the new client id
+     */
     public String connect(){
         String str = "" + currentConnectionID++;
         String id = ("0000000000" + str).substring(str.length());
@@ -811,6 +830,11 @@ public class Library {
         return id;
     }
 
+    /**
+     * Removes a client ID from the associated account or list
+     * @param id : the client id to be disconnected
+     * @return a success or failure message
+     */
     public String disconnect(String id){
         switch (checkClientID(id)) {
             case 0:
@@ -830,6 +854,15 @@ public class Library {
         return id+",disconnect;";
     }
 
+    /**
+     * Creates an account using the passed parameters
+     * @param clientID : the client id of the new account
+     * @param username : the username of the new account
+     * @param pwd : the password of the new account
+     * @param role : a string representation of the role of the new account
+     * @param visID : the visitor id of the new account
+     * @return a success or failure message
+     */
     public String createAccount(String clientID, String username, String pwd, String role, String visID){
         for (Account account : libraryAccounts){
             if (account.getUsername().equals(username)){return clientID+",create,duplicate-username;";}
@@ -848,6 +881,13 @@ public class Library {
         return clientID+",create,success;";
     }
 
+    /**
+     * Logs into an account using the passed account details
+     * @param clientID : the client id of the account
+     * @param username : the username of the account
+     * @param pwd : the password of the account
+     * @return a success or failure message
+     */
     public String login(String clientID, String username, String pwd){
         if (checkClientID(clientID)==0){return "login,invalid-client-id;";}
         for (Account account : libraryAccounts){
@@ -861,6 +901,11 @@ public class Library {
         return clientID+",login,bad-username-or-password;";
     }
 
+    /**
+     * Logs out of an account with the passed clientID
+     * @param clientID : the client id of the account
+     * @return a success or failure message
+     */
     public String logout(String clientID){
         if (checkClientID(clientID)==0){return "logout,invalid-client-id;";}
         for (Account account : libraryAccounts){
