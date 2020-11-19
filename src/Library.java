@@ -332,7 +332,6 @@ public class Library {
      */
     public String registerVisitor(String firstName, String lastName, String address, String phoneNumber, String clientID) {
         if (checkClientID(clientID)==0){return "register,invalid-client-id;";}
-        if (checkClientID(clientID)!=2){return ""+clientID+",<register>,not-authorized;";}
         String str = "" + currentID++;
         String id = ("0000000000" + str).substring(str.length());
 
@@ -514,6 +513,7 @@ public class Library {
      * @return
      */
     public String buyBook(ArrayList<String> bookID, int amount, String clientID) {
+        System.out.println(checkClientID(clientID));
         if (checkClientID(clientID)==0){return "buy,invalid-client-id;";}
         if (checkClientID(clientID)!=2){return ""+clientID+",<buy>,not-authorized;";}
         List<String> failList = new ArrayList<>();

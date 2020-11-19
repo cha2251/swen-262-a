@@ -1,5 +1,9 @@
 public class UndoRequest implements Request {
 
+
+    public UndoRequest(Library library) {
+    }
+
     /**
      * Request call for undoing a request
      * @param args

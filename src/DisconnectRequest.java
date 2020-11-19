@@ -22,7 +22,7 @@ public class DisconnectRequest implements Request {
     @Override
     public String execute(String[] args) {
         if (args.length == 2) {
-            String result = library.disconnect(args[1]);
+            String result = library.disconnect(args[0]);
             return result;
         }
         return "client ID,disconnect;";
